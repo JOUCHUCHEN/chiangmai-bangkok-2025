@@ -1,154 +1,174 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<title>2025年8月。清邁&曼谷</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>清邁 ✈ 曼谷 冒險地圖</title>
+
 <style>
-  body {
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    touch-action: none; /* 防止雙指縮放與滑動 */
-  }
-  #gameContainer {
-    position: relative;
-    width: 100vw;   /* 視窗寬度 100% */
-    height: 100vh;  /* 視窗高度 100% */
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+  text-align: center;
+  color: white;
+  font-family: "微軟正黑體";
+}
 
-    background-image: url('img/background1.png'), url('img/background2.png');
-    background-repeat: no-repeat, no-repeat;
-    background-position: 15% center, 85% center;
-    background-size: 512px 512px, 512px 512px;
+/* === 地圖容器 === */
+#map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
 
-    background-color: #c5e3bf;
-    overflow: hidden;
-  }
+/* === 地圖樣式 === */
+.map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 1s ease;
+}
 
-  #hero {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background-image: url('img/us.png');
-    background-size: cover;    /* 讓圖片填滿角色區塊 */
-    background-position: center;
-    border-radius: 50%;        /* 可視情況保留或刪除 */
-     z-index: 10;
-  }
-  .house {
-    position: absolute;
-    cursor: pointer;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .house:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-  }
-  .house img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .houseLabel {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 13px;
-    font-weight: bold;
-    color: #264d00;
-    text-shadow: 0 1px 2px #fff;
-    pointer-events: none;
-  }
+/* 曼谷縮小圖（右下角） */
+.map.mini {
+  width: 25vw;
+  height: 25vw;
+  bottom: 5vw;
+  right: 5vw;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+  z-index: 2;
+}
+
+/* 目前顯示地圖 */
+.map.active {
+  z-index: 1;
+}
+
+/* === 玩家角色 === */
+#player {
+  position: absolute;
+  width: 10vw;
+  transition: all 0.2s linear;
+  z-index: 3;
+}
+
+/* === 手機版控制鍵 === */
+#controls {
+  position: fixed;
+  bottom: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  width: 40vw;
+  justify-content: center;
+  gap: 1vw;
+  z-index: 5;
+}
+#controls button {
+  width: 10vw;
+  height: 10vw;
+  font-size: 5vw;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.3);
+  color: white;
+  font-weight: bold;
+}
 </style>
 </head>
+
 <body>
-  <div id="gameContainer">
-    <div id="hero"></div>
-  </div>
 
-  <script>
-    const container = document.getElementById("gameContainer");
-    const hero = document.getElementById("hero");
+<!-- === 地圖與角色 === -->
+<div id="map-container">
+  <img id="background1" src="img/chiangmai_map.png" class="map active" />
+  <img id="background2" src="img/bangkok_map.png" class="map mini" />
+  <img id="player" src="img/character.png" alt="player" />
+</div>
 
-    let heroPos = { x: 120, y: 120 };
-    const step = 6;
-    const house = { id: "wat", x: 360, y: 200, w: 180, h: 130, name: "nightmarket" };
+<!-- === 控制鍵 === -->
+<div id="controls" style="display: none;">
+  <button id="up">↑</button>
+  <button id="left">←</button>
+  <button id="down">↓</button>
+  <button id="right">→</button>
+</div>
 
-    const div = document.createElement("div");
-    div.className = "house";
-    div.style.left = house.x + "px";
-    div.style.top = house.y + "px";
-    div.style.width = house.w + "px";
-    div.style.height = house.h + "px";
-    div.innerHTML = `<div class='houseLabel'>${house.name}</div><img src='img/nightmarket.png' alt='nightmarket' />`;
-    container.appendChild(div);
+<script>
+// 🟢 僅手機啟用地圖互動模式
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  const player = document.getElementById('player');
+  const map1 = document.getElementById('background1');
+  const map2 = document.getElementById('background2');
+  const controls = document.getElementById('controls');
 
-    function updateHero() {
-      hero.style.left = heroPos.x + "px";
-      hero.style.top = heroPos.y + "px";
+  controls.style.display = 'flex'; // 顯示控制鍵
+
+  let x = 50; // 人物位置 (vw)
+  let y = 50; // 人物位置 (vh)
+  let currentMap = 1;
+  let flying = false;
+
+  function updatePosition() {
+    player.style.left = x + 'vw';
+    player.style.top = y + 'vh';
+  }
+  updatePosition();
+
+  // === 控制移動 ===
+  document.getElementById('up').onclick = () => move(0, -2);
+  document.getElementById('down').onclick = () => move(0, 2);
+  document.getElementById('left').onclick = () => move(-2, 0);
+  document.getElementById('right').onclick = () => move(2, 0);
+
+  function move(dx, dy) {
+    if (flying) return;
+
+    x += dx;
+    y += dy;
+    updatePosition();
+
+    // 檢查是否走出清邁地圖範圍
+    if (currentMap === 1 && (x < 0 || x > 100 || y < 0 || y > 100)) {
+      flyToBangkok();
     }
-    updateHero();
+  }
 
-    // 🔹 鍵盤控制
-    const keys = {};
-    document.addEventListener("keydown", e => keys[e.key] = true);
-    document.addEventListener("keyup", e => keys[e.key] = false);
+  // === 飛機動畫 + 地圖切換 ===
+  function flyToBangkok() {
+    flying = true;
+    player.src = "img/airplane.png";
+    player.style.transition = "all 2s ease-in-out";
 
-    // 🔹 手機觸控控制（點擊移動）
-    let target = null;
-    container.addEventListener("touchstart", e => {
-      const rect = container.getBoundingClientRect();
-      const touch = e.touches[0];
-      target = {
-        x: touch.clientX - rect.left - 25,
-        y: touch.clientY - rect.top - 25
-      };
-    });
+    // 飛往右下角 (曼谷小圖位置)
+    player.style.left = "75vw";
+    player.style.top = "75vh";
 
-    // 🔹 檢查碰撞
-    function overlap(a, b) {
-      return !(a.x + 40 < b.x || a.x > b.x + b.w || a.y + 40 < b.y || a.y > b.y + b.h);
-    }
+    setTimeout(() => {
+      // 清邁消失、曼谷放大
+      map1.classList.remove("active");
+      map2.classList.remove("mini");
+      map2.classList.add("active");
 
-    function gameLoop() {
-      let dx = 0, dy = 0;
-      if (keys["ArrowUp"] || keys["w"]) dy -= step;
-      if (keys["ArrowDown"] || keys["s"]) dy += step;
-      if (keys["ArrowLeft"] || keys["a"]) dx -= step;
-      if (keys["ArrowRight"] || keys["d"]) dx += step;
+      // 重置角色
+      player.src = "img/character.png";
+      player.style.transition = "none";
+      x = 50; 
+      y = 50;
+      updatePosition();
 
-      // 🔹 手機觸控移動
-      if (target) {
-        const diffX = target.x - heroPos.x;
-        const diffY = target.y - heroPos.y;
-        const dist = Math.hypot(diffX, diffY);
-        if (dist > 5) {
-          heroPos.x += (diffX / dist) * step;
-          heroPos.y += (diffY / dist) * step;
-        } else {
-          target = null;
-        }
-      }
+      currentMap = 2;
+      flying = false;
+    }, 2000);
+  }
+}
+</script>
 
-      heroPos.x = Math.max(0, Math.min(window.innerWidth - 60, heroPos.x + dx));
-      heroPos.y = Math.max(0, Math.min(window.innerHeight - 60, heroPos.y + dy));
-      updateHero();
-
-      // 🔹 進入房間
-      if ((keys["Enter"] || target === null) && overlap(heroPos, house)) {
-        window.location.href = "album.html";
-        keys["Enter"] = false;
-        target = null;
-      }
-
-      requestAnimationFrame(gameLoop);
-    }
-
-    gameLoop();
-  </script>
 </body>
 </html>
