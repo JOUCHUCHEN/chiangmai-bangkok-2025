@@ -87,12 +87,12 @@
   /* ====== 手機控制鍵（方向與進入鍵） ====== */
   #controls {
     position: absolute;
-    bottom: 30px;
+    bottom: 100px; /* ✅ 原本30px → 改為100px，整組上移 */
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 150px;
-    display: none;   /* 電腦版不顯示 */
+    width: 220px;  /* 稍微放寬一點，讓中間放得下「進入」鍵 */
+    height: 180px;
+    display: none;
     z-index: 30;
   }
   @media (max-width: 799px) {
@@ -115,10 +115,13 @@
   .btn:active { background: #ffd; }
 
   /* 方向按鈕位置 */
-  #btnUp { top: 0; left: 70px; }
-  #btnDown { bottom: 0; left: 70px; }
-  #btnLeft { top: 45px; left: 0; }
-  #btnRight { top: 45px; right: 0; }
+/* --- 手機控制鍵位置 --- */
+  #btnUp    { top: 0; left: 80px; }
+  #btnDown  { bottom: 0; left: 80px; }
+  #btnLeft  { top: 60px; left: 20px; }
+  #btnRight { top: 60px; right: 20px; }
+/* --- 進入鍵放中間 --- */
+  #btnEnter { top: 60px; left: 80px; }
 </style>
 </head>
 <body>
@@ -130,11 +133,10 @@
     <!-- ====== 手機控制區 ====== -->
     <div id="controls">
       <div id="btnUp" class="btn">↑</div>
-      <div id="btnDown" class="btn">↓</div>
       <div id="btnLeft" class="btn">←</div>
+      <div id="btnEnter" class="btn" style="background:#ffeb3b;">進入</div>
       <div id="btnRight" class="btn">→</div>
-      <!-- 新增的「進入」按鈕（模擬Enter鍵） -->
-      <div id="btnEnter" class="btn" style="bottom:-70px; left:70px; background:#ffeb3b;">進入</div>
+      <div id="btnDown" class="btn">↓</div>
     </div>
   </div>
 
@@ -259,5 +261,6 @@
 </script>
 </body>
 </html>
+
 
 
