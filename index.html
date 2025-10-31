@@ -229,31 +229,31 @@
         window.location.href = "album.html";  // 開啟相簿頁面
       }
 
-// --- 清邁：走出右邊界，變成飛機起飛 ---
-if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
-  hero.style.backgroundImage = "url('img/plane.png')";
-  inFlight = true;  // 啟動飛行模式
-}
-
-// --- 飛行動畫（自動往右下飛向曼谷地圖中心） ---
-if (inFlight) {
-  // 計算曼谷地圖中心
-  const bangkokMap = document.getElementById("bangkokMap");
-  const bangkokCenterX = bangkokMap.offsetLeft + bangkokMap.offsetWidth / 2 - 30; // 30 = hero 寬度一半
-  const bangkokCenterY = bangkokMap.offsetTop + bangkokMap.offsetHeight / 2 - 30;
-
-  // 緩慢靠近曼谷地圖中心
-  heroPos.x += (bangkokCenterX - heroPos.x) * 0.05; 
-  heroPos.y += (bangkokCenterY - heroPos.y) * 0.05; 
-  updateHero();
-
-  // 判斷是否到達曼谷地圖中心
-  if (Math.abs(heroPos.x - bangkokCenterX) < 1 && Math.abs(heroPos.y - bangkokCenterY) < 1) {
-    inFlight = false;
-    inBangkok = true;
-    hero.style.backgroundImage = "url('img/us.png')";
-  }
-}
+      // --- 清邁：走出右邊界，變成飛機起飛 ---
+      if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
+        hero.style.backgroundImage = "url('img/plane.png')";
+        inFlight = true;  // 啟動飛行模式
+      }
+      
+      // --- 飛行動畫（自動往右下飛向曼谷地圖中心） ---
+      if (inFlight) {
+        // 計算曼谷地圖中心
+        const bangkokMap = document.getElementById("bangkokMap");
+        const bangkokCenterX = bangkokMap.offsetLeft + bangkokMap.offsetWidth / 2 - 30; // 30 = hero 寬度一半
+        const bangkokCenterY = bangkokMap.offsetTop + bangkokMap.offsetHeight / 2 - 30;
+      
+        // 緩慢靠近曼谷地圖中心
+        heroPos.x += (bangkokCenterX - heroPos.x) * 0.05; 
+        heroPos.y += (bangkokCenterY - heroPos.y) * 0.05; 
+        updateHero();
+      
+        // 判斷是否到達曼谷地圖中心
+        if (Math.abs(heroPos.x - bangkokCenterX) < 1 && Math.abs(heroPos.y - bangkokCenterY) < 1) {
+          inFlight = false;
+          inBangkok = true;
+          hero.style.backgroundImage = "url('img/us.png')";
+        }
+      }
 
 // --- 曼谷：到特定區域也能開相簿 ---
 if (inBangkok) {
@@ -282,6 +282,7 @@ if (inBangkok) {
 </script>
 </body>
 </html>
+
 
 
 
