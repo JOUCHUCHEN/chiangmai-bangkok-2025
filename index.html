@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版</title>
+<title>清邁 & 曼谷 海洋版1/title>
 <style>
   /* ====== 基本設定 ====== */
   body {
@@ -17,12 +17,30 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-image: url('img/ocean.png'); /* 海洋背景 */
+    background-image: url('img/ocean.png'); /* 海洋底色 */
     background-size: cover;
     background-position: center;
     overflow: hidden;
   }
 
+  #chiangMaiMap { display:none; } /* 預設隱藏電腦版不顯示浮動地圖 */
+
+  /* ===== 電腦版背景 ===== */
+@media (min-width:800px){
+  #gameContainer{
+    background-image: url('img/background1.png'), url('img/background2.png');
+    background-repeat: no-repeat, no-repeat;
+    background-position: 15% center, 85% center;
+    background-size: 512px 512px, 512px 512px;
+  }
+}
+
+/* ===== 手機版浮動清邁地圖 ===== */
+@media (max-width:799px){
+  #chiangMaiMap{ display:block; }
+  #gameContainer{ background-image:url('img/ocean.png'); }
+}
+  
   /* ====== 清邁地圖浮在海上 ====== */
   #chiangMaiMap {
     position: absolute;
@@ -203,10 +221,11 @@ function gameLoop(){
     updateHero();
 
     // 夜市進入相簿
-    if(!inBangkok && overlap(hero,nightmarket) && keys["Enter"]){
+    const heroRect = hero.getBoundingClientRect();
+    const nightRect = nightmarket.getBoundingClientRect();
+    if(!inBangkok && overlap(hero, nightmarket) && keys["Enter"]){
       window.location.href="album.html";
     }
-
     // 手機右移出清邁地圖 → 變飛機
     const mapRect = chiangMaiMap.getBoundingClientRect();
     if(isMobile && heroPos.x>mapRect.right && !inBangkok){
@@ -221,3 +240,4 @@ gameLoop();
 </script>
 </body>
 </html>
+
