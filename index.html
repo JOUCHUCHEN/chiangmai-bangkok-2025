@@ -9,65 +9,56 @@
   body {
     margin: 0;
     font-family: "Microsoft JhengHei", sans-serif;
-    background: #5982CB;
     overflow: hidden;
-    -webkit-user-select: none;    /* 禁止選取文字（避免誤觸） */
-    -webkit-touch-callout: none;  /* 禁止長按選單 */
-  }
-
-  /* ====== 遊戲容器區塊 ====== */
-  #gameContainer {
-    background-image: url('img/ocean.png'); /* ✅ 換成你的海洋圖 */
-    background-repeat: no-repeat;
+    background-image: url('img/ocean.png');  /* 🌊 整體海洋背景 */
     background-size: cover;
     background-position: center;
   }
 
-  /* ====== 電腦版：並排顯示兩張地圖 ====== */
-  @media (min-width: 800px) {
-    #gameContainer {
-      background-image: url('img/background1.png'), url('img/background2.png'); /* 清邁、曼谷地圖 */
-      background-repeat: no-repeat, no-repeat;
-      background-position: 15% center, 85% center;  /* 左右分布 */
-      background-size: 512px 512px, 512px 512px;    /* 等比例縮小後的大小 */
-    }
-  }
-
-  /* ====== 手機版：初始只顯示清邁地圖 ====== */
-  @media (max-width: 799px) {
+  /* ====== 遊戲主容器 ====== */
   #gameContainer {
-      background-image: url('img/background1.png');
-      background-repeat: no-repeat;
-      background-size: 85% auto;   /* ✅ 地圖縮小 */
-      background-position: center 55%;  /* ✅ 微調位置 */
-    }
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
   }
-    /* 手機版右下角出現縮小版曼谷地圖 */
-    #miniBangkok {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      width: 120px;
-      height: 120px;
-      background-image: url('img/background2.png');
-      background-size: cover;
-      border: 2px solid #333;
-      border-radius: 8px;
-      z-index: 5;
-    }
 
-  /* ====== 主角造型 ====== */
+  /* ====== 清邁與曼谷地圖 ====== */
+  .map {
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  #chiangMaiMap {
+    background-image: url('img/background1.png');
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%); /* 垂直置中 */
+  }
+
+  #bangkokMap {
+    background-image: url('img/background2.png');
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* ====== 主角 ====== */
   #hero {
     position: absolute;
     width: 60px;
     height: 60px;
-    background-image: url('img/us.png');  /* 預設為人物圖片 */
+    background-image: url('img/us.png');
     background-size: cover;
     background-position: center;
     z-index: 10;
   }
 
-  /* ====== 景點建築（清邁夜市） ====== */
+  /* ====== 清邁景點 ====== */
   .house {
     position: absolute;
     width: 140px;
@@ -76,29 +67,27 @@
     overflow: hidden;
     cursor: pointer;
   }
-
   .house img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  /* ====== 手機控制鍵（方向與進入鍵） ====== */
+  /* ====== 手機虛擬控制鍵 ====== */
   #controls {
     position: absolute;
-    bottom: 100px; /* ✅ 原本30px → 改為100px，整組上移 */
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
-    width: 220px;  /* 稍微放寬一點，讓中間放得下「進入」鍵 */
+    width: 220px;
     height: 180px;
     display: none;
     z-index: 30;
   }
   @media (max-width: 799px) {
-    #controls { display: block; }  /* 手機版顯示 */
+    #controls { display: block; }
   }
 
-  /* 按鈕樣式統一設計 */
   .btn {
     position: absolute;
     width: 60px;
@@ -113,27 +102,27 @@
   }
   .btn:active { background: #ffd; }
 
-  /* 方向按鈕位置 */
-/* --- 手機控制鍵位置 --- */
-  #btnUp    { top: 0; left: 80px; }
-  #btnDown  { bottom: 0; left: 80px; }
-  #btnLeft  { top: 60px; left: 20px; }
+  /* 方向鍵位置 */
+  #btnUp { top: 0; left: 80px; }
+  #btnDown { bottom: 0; left: 80px; }
+  #btnLeft { top: 60px; left: 20px; }
   #btnRight { top: 60px; right: 20px; }
-/* --- 進入鍵放中間 --- */
-  #btnEnter { top: 60px; left: 80px; }
+  #btnEnter { top: 60px; left: 80px; background: #ffeb3b; }
 </style>
 </head>
 <body>
-  <!-- ====== 遊戲畫面主容器 ====== -->
   <div id="gameContainer">
-    <div id="hero"></div>          <!-- 主角 -->
-    <div id="miniBangkok"></div>   <!-- 手機右下角小曼谷地圖 -->
-    
-    <!-- ====== 手機控制區 ====== -->
+    <!-- 🌍 兩張地圖浮在海洋上 -->
+    <div id="chiangMaiMap" class="map"></div>
+    <div id="bangkokMap" class="map"></div>
+
+    <div id="hero"></div>
+
+    <!-- 📱 手機虛擬控制鍵 -->
     <div id="controls">
       <div id="btnUp" class="btn">↑</div>
       <div id="btnLeft" class="btn">←</div>
-      <div id="btnEnter" class="btn" style="background:#ffeb3b;">進入</div>
+      <div id="btnEnter" class="btn">進入</div>
       <div id="btnRight" class="btn">→</div>
       <div id="btnDown" class="btn">↓</div>
     </div>
@@ -240,17 +229,50 @@
         window.location.href = "album.html";  // 開啟相簿頁面
       }
 
-      // --- 清邁：走出右邊界，變成飛機起飛 ---
-      if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
-        hero.style.backgroundImage = "url('img/plane.png')";
-        inFlight = true;  // 啟動飛行模式
-      }
+// --- 清邁：走出右邊界，變成飛機起飛 ---
+if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
+  hero.style.backgroundImage = "url('img/plane.png')";
+  inFlight = true;  // 啟動飛行模式
+}
 
-      // --- 曼谷：到特定區域也能開相簿 ---
-      if (inBangkok && heroPos.x > 200 && heroPos.x < 400 && heroPos.y > 200 && heroPos.y < 400 && keys["Enter"]) {
-        window.location.href = "album.html";
-      }
-    }
+// --- 飛行動畫（自動往右下飛向曼谷地圖中心） ---
+if (inFlight) {
+  // 計算曼谷地圖中心
+  const bangkokMap = document.getElementById("bangkokMap");
+  const bangkokCenterX = bangkokMap.offsetLeft + bangkokMap.offsetWidth / 2 - 30; // 30 = hero 寬度一半
+  const bangkokCenterY = bangkokMap.offsetTop + bangkokMap.offsetHeight / 2 - 30;
+
+  // 緩慢靠近曼谷地圖中心
+  heroPos.x += (bangkokCenterX - heroPos.x) * 0.05; 
+  heroPos.y += (bangkokCenterY - heroPos.y) * 0.05; 
+  updateHero();
+
+  // 判斷是否到達曼谷地圖中心
+  if (Math.abs(heroPos.x - bangkokCenterX) < 1 && Math.abs(heroPos.y - bangkokCenterY) < 1) {
+    inFlight = false;
+    inBangkok = true;
+    hero.style.backgroundImage = "url('img/us.png')";
+  }
+}
+
+// --- 曼谷：到特定區域也能開相簿 ---
+if (inBangkok) {
+  const bangkokMap = document.getElementById("bangkokMap");
+  const bangkokLeft = bangkokMap.offsetLeft;
+  const bangkokRight = bangkokLeft + bangkokMap.offsetWidth;
+  const bangkokTop = bangkokMap.offsetTop;
+  const bangkokBottom = bangkokTop + bangkokMap.offsetHeight;
+
+  if (
+    heroPos.x > bangkokLeft &&
+    heroPos.x < bangkokRight &&
+    heroPos.y > bangkokTop &&
+    heroPos.y < bangkokBottom &&
+    keys["Enter"]
+  ) {
+    window.location.href = "album.html";
+  }
+}
 
     requestAnimationFrame(gameLoop);  // 不斷重複執行（動畫用）
   }
@@ -260,6 +282,7 @@
 </script>
 </body>
 </html>
+
 
 
 
