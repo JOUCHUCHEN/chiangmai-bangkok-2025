@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版111</title>
+<title>清邁 & 曼谷 海洋版11</title>
 <style>
   
 /* ===== 基本設定 ===== */
@@ -87,20 +87,20 @@ body {
 }
   
 @media (max-width:799px){
-#controls { display: block; }
+  #controls { display: block; }
 
-/* 手機版浮動清邁地圖放大 */
-#chiangMaiMap{
-  display:block;
-  width: 100vw;           /* 幾乎佔滿手機寬度 */
-  height: calc(85vw * 0.75); /* 按地圖比例設定高度 (假設寬高比4:3) */
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
-}
+  /* 手機版浮動清邁地圖放大 */
+  #chiangMaiMap{
+    display:block;
+    width: 95vw;                    /* 放大到幾乎全螢幕 */
+    height: calc(95vw * 0.75);      /* 按地圖比例設定高度 (假設寬高比4:3) */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 2;
+  }
 }
 
 /* ===== 按鈕樣式 ===== */
@@ -247,6 +247,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
