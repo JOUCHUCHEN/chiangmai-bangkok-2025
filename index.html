@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>2025年8月 清邁 & 曼谷</title>
+<title>2025年8月 清邁 & 曼谷1</title>
 <style>
   body {
     margin: 0;
@@ -122,6 +122,7 @@
       <div id="btnDown" class="btn">↓</div>
       <div id="btnLeft" class="btn">←</div>
       <div id="btnRight" class="btn">→</div>
+      <div id="btnEnter" class="btn" style="bottom:-70px; left:70px; background:#ffeb3b;">進入</div>
     </div>
   </div>
 
@@ -167,6 +168,18 @@
         e.preventDefault();
         keys[btn.id.replace("btn", "").toLowerCase()] = false;
       });
+    });
+  }
+
+  if (isMobile) {
+    const enterBtn = document.getElementById("btnEnter");
+    enterBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      keys["Enter"] = true;    // 模擬按下 Enter
+    });
+    enterBtn.addEventListener("touchend", e => {
+      e.preventDefault();
+      keys["Enter"] = false;   // 放開 Enter
     });
   }
 
@@ -223,4 +236,5 @@
 </script>
 </body>
 </html>
+
 
