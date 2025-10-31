@@ -5,41 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>2025年8月 清邁 & 曼谷1</title>
 <style>
+  /* ====== 基本設定 ====== */
   body {
     margin: 0;
     font-family: "Microsoft JhengHei", sans-serif;
     background: #4472C4;
     overflow: hidden;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
+    -webkit-user-select: none;    /* 禁止選取文字（避免誤觸） */
+    -webkit-touch-callout: none;  /* 禁止長按選單 */
   }
 
+  /* ====== 遊戲容器區塊 ====== */
   #gameContainer {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100vw;    /* 視窗寬度 100% */
+    height: 100vh;   /* 視窗高度 100% */
     overflow: hidden;
-    background-color: #c5e3bf;
+    background-color: #c5e3bf;   /* 草地底色 */
   }
 
-  /* 電腦：兩地圖並排 */
+  /* ====== 電腦版：並排顯示兩張地圖 ====== */
   @media (min-width: 800px) {
     #gameContainer {
-      background-image: url('img/background1.png'), url('img/background2.png');
+      background-image: url('img/background1.png'), url('img/background2.png'); /* 清邁、曼谷地圖 */
       background-repeat: no-repeat, no-repeat;
-      background-position: 15% center, 85% center;
-      background-size: 512px 512px, 512px 512px;
+      background-position: 15% center, 85% center;  /* 左右分布 */
+      background-size: 512px 512px, 512px 512px;    /* 等比例縮小後的大小 */
     }
   }
 
-  /* 手機：初始只顯示清邁地圖 */
+  /* ====== 手機版：初始只顯示清邁地圖 ====== */
   @media (max-width: 799px) {
-    #gameContainer {
+  #gameContainer {
       background-image: url('img/background1.png');
       background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
+      background-size: 85% auto;   /* ✅ 地圖縮小 */
+      background-position: center 55%;  /* ✅ 微調位置 */
     }
+  }
+    /* 手機版右下角出現縮小版曼谷地圖 */
     #miniBangkok {
       position: absolute;
       bottom: 20px;
@@ -54,16 +58,18 @@
     }
   }
 
+  /* ====== 主角造型 ====== */
   #hero {
     position: absolute;
     width: 60px;
     height: 60px;
-    background-image: url('img/us.png');
+    background-image: url('img/us.png');  /* 預設為人物圖片 */
     background-size: cover;
     background-position: center;
     z-index: 10;
   }
 
+  /* ====== 景點建築（清邁夜市） ====== */
   .house {
     position: absolute;
     width: 140px;
@@ -79,7 +85,7 @@
     object-fit: cover;
   }
 
-  /* 手機控制鍵 */
+  /* ====== 手機控制鍵（方向與進入鍵） ====== */
   #controls {
     position: absolute;
     bottom: 30px;
@@ -87,12 +93,14 @@
     transform: translateX(-50%);
     width: 200px;
     height: 150px;
-    display: none;
+    display: none;   /* 電腦版不顯示 */
     z-index: 30;
   }
   @media (max-width: 799px) {
-    #controls { display: block; }
+    #controls { display: block; }  /* 手機版顯示 */
   }
+
+  /* 按鈕樣式統一設計 */
   .btn {
     position: absolute;
     width: 60px;
@@ -106,62 +114,70 @@
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   }
   .btn:active { background: #ffd; }
+
+  /* 方向按鈕位置 */
   #btnUp { top: 0; left: 70px; }
   #btnDown { bottom: 0; left: 70px; }
   #btnLeft { top: 45px; left: 0; }
   #btnRight { top: 45px; right: 0; }
-
 </style>
 </head>
 <body>
+  <!-- ====== 遊戲畫面主容器 ====== -->
   <div id="gameContainer">
-    <div id="hero"></div>
-    <div id="miniBangkok"></div>
+    <div id="hero"></div>          <!-- 主角 -->
+    <div id="miniBangkok"></div>   <!-- 手機右下角小曼谷地圖 -->
+    
+    <!-- ====== 手機控制區 ====== -->
     <div id="controls">
       <div id="btnUp" class="btn">↑</div>
       <div id="btnDown" class="btn">↓</div>
       <div id="btnLeft" class="btn">←</div>
       <div id="btnRight" class="btn">→</div>
+      <!-- 新增的「進入」按鈕（模擬Enter鍵） -->
       <div id="btnEnter" class="btn" style="bottom:-70px; left:70px; background:#ffeb3b;">進入</div>
     </div>
   </div>
 
 <script>
-  const hero = document.getElementById("hero");
+  /* ====== 主要變數設定 ====== */
+  const hero = document.getElementById("hero");          // 角色
   const container = document.getElementById("gameContainer");
   const miniBangkok = document.getElementById("miniBangkok");
-  const isMobile = window.innerWidth < 800;
+  const isMobile = window.innerWidth < 800;              // 判斷是否為手機
 
-  let heroPos = { x: 100, y: 200 };
-  let step = 6;
-  let inFlight = false;
-  let inBangkok = false;
+  let heroPos = { x: 100, y: 200 };  // 角色初始座標
+  let step = 6;                      // 每次移動距離
+  let inFlight = false;              // 是否正在飛行中
+  let inBangkok = false;             // 是否已抵達曼谷
 
-  // 清邁景點
+  /* ====== 清邁景點設定 ====== */
   const chiangMaiHouse = { x: 220, y: 250, w: 120, h: 100, name: "nightmarket" };
   const houseDiv = document.createElement("div");
   houseDiv.className = "house";
   houseDiv.style.left = chiangMaiHouse.x + "px";
   houseDiv.style.top = chiangMaiHouse.y + "px";
   houseDiv.innerHTML = `<img src="img/nightmarket.png" alt="nightmarket">`;
-  container.appendChild(houseDiv);
+  container.appendChild(houseDiv);  // 加入遊戲畫面
 
+  /* ====== 更新角色位置 ====== */
   function updateHero() {
     hero.style.left = heroPos.x + "px";
     hero.style.top = heroPos.y + "px";
   }
   updateHero();
 
-  // 按鍵控制
+  /* ====== 電腦鍵盤控制 ====== */
   const keys = {};
   document.addEventListener("keydown", e => keys[e.key] = true);
   document.addEventListener("keyup", e => keys[e.key] = false);
 
-  // 手機方向鍵
+  /* ====== 手機虛擬方向鍵控制 ====== */
   if (isMobile) {
     document.querySelectorAll(".btn").forEach(btn => {
       btn.addEventListener("touchstart", e => {
         e.preventDefault();
+        // 取按鈕ID，如btnUp → "up"，設定為true
         keys[btn.id.replace("btn", "").toLowerCase()] = true;
       });
       btn.addEventListener("touchend", e => {
@@ -171,6 +187,7 @@
     });
   }
 
+  /* ====== 手機「進入」鍵模擬 Enter 功能 ====== */
   if (isMobile) {
     const enterBtn = document.getElementById("btnEnter");
     enterBtn.addEventListener("touchstart", e => {
@@ -183,58 +200,63 @@
     });
   }
 
-  // 碰撞判斷
+  /* ====== 碰撞檢查（角色與景點接觸） ====== */
   function overlap(a, b) {
     return !(a.x + 60 < b.x || a.x > b.x + b.w || a.y + 60 < b.y || a.y > b.y + b.h);
   }
 
+  /* ====== 遊戲主迴圈 ====== */
   function gameLoop() {
     if (inFlight) {
+      // --- 飛機動畫：角色自動往右下飛 ---
       heroPos.x += 3;
       heroPos.y += 2;
       updateHero();
 
-      // 飛到右下角
+      // 抵達右下角 → 抵達曼谷
       if (heroPos.x > window.innerWidth - 150 && heroPos.y > window.innerHeight - 150) {
         inFlight = false;
         inBangkok = true;
-        hero.style.backgroundImage = "url('img/us.png')";
-        container.style.backgroundImage = "url('img/background2.png')";
+        hero.style.backgroundImage = "url('img/us.png')";    // 換回人像
+        container.style.backgroundImage = "url('img/background2.png')"; // 曼谷放大
         container.style.backgroundSize = "cover";
-        miniBangkok.style.display = "none";
+        miniBangkok.style.display = "none";  // 小地圖消失
       }
     } else {
+      // --- 控制移動 ---
       let dx = 0, dy = 0;
       if (keys["ArrowUp"] || keys["up"]) dy -= step;
       if (keys["ArrowDown"] || keys["down"]) dy += step;
       if (keys["ArrowLeft"] || keys["left"]) dx -= step;
       if (keys["ArrowRight"] || keys["right"]) dx += step;
 
+      // 限制角色不超出邊界
       heroPos.x = Math.max(0, Math.min(window.innerWidth - 60, heroPos.x + dx));
       heroPos.y = Math.max(0, Math.min(window.innerHeight - 60, heroPos.y + dy));
       updateHero();
 
-      // 清邁：進入夜市
+      // --- 清邁：到達夜市並按「進入」進相簿 ---
       if (!inBangkok && overlap(heroPos, chiangMaiHouse) && keys["Enter"]) {
-        window.location.href = "album.html";
+        window.location.href = "album.html";  // 開啟相簿頁面
       }
 
-      // 清邁：走出右邊界變成飛機
+      // --- 清邁：走出右邊界，變成飛機起飛 ---
       if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
         hero.style.backgroundImage = "url('img/plane.png')";
-        inFlight = true;
+        inFlight = true;  // 啟動飛行模式
       }
 
-      // 曼谷：若到特定區也能進相簿
+      // --- 曼谷：到特定區域也能開相簿 ---
       if (inBangkok && heroPos.x > 200 && heroPos.x < 400 && heroPos.y > 200 && heroPos.y < 400 && keys["Enter"]) {
         window.location.href = "album.html";
       }
     }
-    requestAnimationFrame(gameLoop);
+
+    requestAnimationFrame(gameLoop);  // 不斷重複執行（動畫用）
   }
+
+  /* ====== 啟動遊戲 ====== */
   gameLoop();
 </script>
 </body>
 </html>
-
-
