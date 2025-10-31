@@ -3,31 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>2025年8月。清邁 & 曼谷</title>
+<title>2025年8月 清邁 & 曼谷1</title>
 <style>
   body {
     margin: 0;
     font-family: "Microsoft JhengHei", sans-serif;
-    background: linear-gradient(135deg, #fff7eb, #e8f5ff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background: #e8f5ff;
     overflow: hidden;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-    touch-action: none;
   }
 
   #gameContainer {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: #c5e3bf;
     overflow: hidden;
+    background-color: #c5e3bf;
   }
 
-  /* 電腦版背景：兩地圖並排 */
+  /* 電腦：兩地圖並排 */
   @media (min-width: 800px) {
     #gameContainer {
       background-image: url('img/background1.png'), url('img/background2.png');
@@ -37,15 +32,14 @@
     }
   }
 
-  /* 手機版背景：一開始只顯示清邁地圖 */
+  /* 手機：初始只顯示清邁地圖 */
   @media (max-width: 799px) {
     #gameContainer {
       background-image: url('img/background1.png');
       background-repeat: no-repeat;
-      background-position: center;
       background-size: cover;
+      background-position: center;
     }
-
     #miniBangkok {
       position: absolute;
       bottom: 20px;
@@ -54,8 +48,7 @@
       height: 120px;
       background-image: url('img/background2.png');
       background-size: cover;
-      background-repeat: no-repeat;
-      border: 2px solid #555;
+      border: 2px solid #333;
       border-radius: 8px;
       z-index: 5;
     }
@@ -71,7 +64,22 @@
     z-index: 10;
   }
 
-  /* 虛擬按鈕（手機） */
+  .house {
+    position: absolute;
+    width: 140px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .house img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 手機控制鍵 */
   #controls {
     position: absolute;
     bottom: 30px;
@@ -79,33 +87,25 @@
     transform: translateX(-50%);
     width: 200px;
     height: 150px;
-    z-index: 20;
     display: none;
+    z-index: 30;
   }
-
   @media (max-width: 799px) {
-    #controls {
-      display: block;
-    }
+    #controls { display: block; }
   }
-
   .btn {
     position: absolute;
     width: 60px;
     height: 60px;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.8);
     border-radius: 50%;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     text-align: center;
     line-height: 60px;
+    font-size: 22px;
     font-weight: bold;
-    font-size: 20px;
-    user-select: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   }
-  .btn:active {
-    background: #ffd;
-  }
-
+  .btn:active { background: #ffd; }
   #btnUp { top: 0; left: 70px; }
   #btnDown { bottom: 0; left: 70px; }
   #btnLeft { top: 45px; left: 0; }
@@ -117,8 +117,6 @@
   <div id="gameContainer">
     <div id="hero"></div>
     <div id="miniBangkok"></div>
-
-    <!-- 手機用方向鍵 -->
     <div id="controls">
       <div id="btnUp" class="btn">↑</div>
       <div id="btnDown" class="btn">↓</div>
@@ -127,82 +125,101 @@
     </div>
   </div>
 
-  <script>
-    const hero = document.getElementById("hero");
-    const container = document.getElementById("gameContainer");
-    const miniBangkok = document.getElementById("miniBangkok");
-    const isMobile = window.innerWidth < 800;
+<script>
+  const hero = document.getElementById("hero");
+  const container = document.getElementById("gameContainer");
+  const miniBangkok = document.getElementById("miniBangkok");
+  const isMobile = window.innerWidth < 800;
 
-    let heroPos = { x: 100, y: 200 };
-    let step = 6;
-    let inFlight = false;
-    let inBangkok = false;
-    let keys = {};
+  let heroPos = { x: 100, y: 200 };
+  let step = 6;
+  let inFlight = false;
+  let inBangkok = false;
 
-    function updateHero() {
-      hero.style.left = heroPos.x + "px";
-      hero.style.top = heroPos.y + "px";
-    }
-    updateHero();
+  // 清邁景點
+  const chiangMaiHouse = { x: 220, y: 250, w: 120, h: 100, name: "nightmarket" };
+  const houseDiv = document.createElement("div");
+  houseDiv.className = "house";
+  houseDiv.style.left = chiangMaiHouse.x + "px";
+  houseDiv.style.top = chiangMaiHouse.y + "px";
+  houseDiv.innerHTML = `<img src="img/nightmarket.png" alt="nightmarket">`;
+  container.appendChild(houseDiv);
 
-    // 電腦鍵盤控制
-    document.addEventListener("keydown", e => keys[e.key] = true);
-    document.addEventListener("keyup", e => keys[e.key] = false);
+  function updateHero() {
+    hero.style.left = heroPos.x + "px";
+    hero.style.top = heroPos.y + "px";
+  }
+  updateHero();
 
-    // 手機方向鍵
-    if (isMobile) {
-      document.querySelectorAll(".btn").forEach(btn => {
-        btn.addEventListener("touchstart", e => {
-          e.preventDefault();
-          const dir = btn.id.replace("btn", "").toLowerCase();
-          keys[dir] = true;
-        });
-        btn.addEventListener("touchend", e => {
-          e.preventDefault();
-          const dir = btn.id.replace("btn", "").toLowerCase();
-          keys[dir] = false;
-        });
+  // 按鍵控制
+  const keys = {};
+  document.addEventListener("keydown", e => keys[e.key] = true);
+  document.addEventListener("keyup", e => keys[e.key] = false);
+
+  // 手機方向鍵
+  if (isMobile) {
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("touchstart", e => {
+        e.preventDefault();
+        keys[btn.id.replace("btn", "").toLowerCase()] = true;
       });
-    }
+      btn.addEventListener("touchend", e => {
+        e.preventDefault();
+        keys[btn.id.replace("btn", "").toLowerCase()] = false;
+      });
+    });
+  }
 
-    function gameLoop() {
-      if (inFlight) {
-        // 飛機飛行動畫
-        heroPos.x += 3;
-        heroPos.y += 2;
-        updateHero();
+  // 碰撞判斷
+  function overlap(a, b) {
+    return !(a.x + 60 < b.x || a.x > b.x + b.w || a.y + 60 < b.y || a.y > b.y + b.h);
+  }
 
-        // 抵達曼谷
-        if (heroPos.x > window.innerWidth - 150 && heroPos.y > window.innerHeight - 150 && !inBangkok) {
-          inFlight = false;
-          inBangkok = true;
-          hero.style.backgroundImage = "url('img/us.png')";
-          container.style.backgroundImage = "url('img/background2.png')";
-          container.style.backgroundSize = "cover";
-          miniBangkok.style.display = "none";
-        }
-      } else {
-        let dx = 0, dy = 0;
-        if (keys["ArrowUp"] || keys["up"]) dy -= step;
-        if (keys["ArrowDown"] || keys["down"]) dy += step;
-        if (keys["ArrowLeft"] || keys["left"]) dx -= step;
-        if (keys["ArrowRight"] || keys["right"]) dx += step;
+  function gameLoop() {
+    if (inFlight) {
+      heroPos.x += 3;
+      heroPos.y += 2;
+      updateHero();
 
-        heroPos.x = Math.max(0, Math.min(window.innerWidth - 60, heroPos.x + dx));
-        heroPos.y = Math.max(0, Math.min(window.innerHeight - 60, heroPos.y + dy));
-        updateHero();
+      // 飛到右下角
+      if (heroPos.x > window.innerWidth - 150 && heroPos.y > window.innerHeight - 150) {
+        inFlight = false;
+        inBangkok = true;
+        hero.style.backgroundImage = "url('img/us.png')";
+        container.style.backgroundImage = "url('img/background2.png')";
+        container.style.backgroundSize = "cover";
+        miniBangkok.style.display = "none";
+      }
+    } else {
+      let dx = 0, dy = 0;
+      if (keys["ArrowUp"] || keys["up"]) dy -= step;
+      if (keys["ArrowDown"] || keys["down"]) dy += step;
+      if (keys["ArrowLeft"] || keys["left"]) dx -= step;
+      if (keys["ArrowRight"] || keys["right"]) dx += step;
 
-        // 手機：走出清邁地圖
-        if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
-          hero.style.backgroundImage = "url('img/plane.png')";
-          inFlight = true;
-        }
+      heroPos.x = Math.max(0, Math.min(window.innerWidth - 60, heroPos.x + dx));
+      heroPos.y = Math.max(0, Math.min(window.innerHeight - 60, heroPos.y + dy));
+      updateHero();
+
+      // 清邁：進入夜市
+      if (!inBangkok && overlap(heroPos, chiangMaiHouse) && keys["Enter"]) {
+        window.location.href = "album.html";
       }
 
-      requestAnimationFrame(gameLoop);
-    }
+      // 清邁：走出右邊界變成飛機
+      if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
+        hero.style.backgroundImage = "url('img/plane.png')";
+        inFlight = true;
+      }
 
-    gameLoop();
-  </script>
+      // 曼谷：若到特定區也能進相簿
+      if (inBangkok && heroPos.x > 200 && heroPos.x < 400 && heroPos.y > 200 && heroPos.y < 400 && keys["Enter"]) {
+        window.location.href = "album.html";
+      }
+    }
+    requestAnimationFrame(gameLoop);
+  }
+  gameLoop();
+</script>
 </body>
 </html>
