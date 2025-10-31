@@ -1,174 +1,208 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>清邁 ✈ 曼谷 冒險地圖</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>2025年8月。清邁 & 曼谷</title>
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-  overflow: hidden;
-  text-align: center;
-  color: white;
-  font-family: "微軟正黑體";
-}
-
-/* === 地圖容器 === */
-#map-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* === 地圖樣式 === */
-.map {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: all 1s ease;
-}
-
-/* 曼谷縮小圖（右下角） */
-.map.mini {
-  width: 25vw;
-  height: 25vw;
-  bottom: 5vw;
-  right: 5vw;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #000;
-  z-index: 2;
-}
-
-/* 目前顯示地圖 */
-.map.active {
-  z-index: 1;
-}
-
-/* === 玩家角色 === */
-#player {
-  position: absolute;
-  width: 10vw;
-  transition: all 0.2s linear;
-  z-index: 3;
-}
-
-/* === 手機版控制鍵 === */
-#controls {
-  position: fixed;
-  bottom: 5vh;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-wrap: wrap;
-  width: 40vw;
-  justify-content: center;
-  gap: 1vw;
-  z-index: 5;
-}
-#controls button {
-  width: 10vw;
-  height: 10vw;
-  font-size: 5vw;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.3);
-  color: white;
-  font-weight: bold;
-}
-</style>
-</head>
-
-<body>
-
-<!-- === 地圖與角色 === -->
-<div id="map-container">
-  <img id="background1" src="img/chiangmai_map.png" class="map active" />
-  <img id="background2" src="img/bangkok_map.png" class="map mini" />
-  <img id="player" src="img/character.png" alt="player" />
-</div>
-
-<!-- === 控制鍵 === -->
-<div id="controls" style="display: none;">
-  <button id="up">↑</button>
-  <button id="left">←</button>
-  <button id="down">↓</button>
-  <button id="right">→</button>
-</div>
-
-<script>
-// 🟢 僅手機啟用地圖互動模式
-if (/Mobi|Android/i.test(navigator.userAgent)) {
-  const player = document.getElementById('player');
-  const map1 = document.getElementById('background1');
-  const map2 = document.getElementById('background2');
-  const controls = document.getElementById('controls');
-
-  controls.style.display = 'flex'; // 顯示控制鍵
-
-  let x = 50; // 人物位置 (vw)
-  let y = 50; // 人物位置 (vh)
-  let currentMap = 1;
-  let flying = false;
-
-  function updatePosition() {
-    player.style.left = x + 'vw';
-    player.style.top = y + 'vh';
+  body {
+    margin: 0;
+    font-family: "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(135deg, #fff7eb, #e8f5ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
   }
-  updatePosition();
 
-  // === 控制移動 ===
-  document.getElementById('up').onclick = () => move(0, -2);
-  document.getElementById('down').onclick = () => move(0, 2);
-  document.getElementById('left').onclick = () => move(-2, 0);
-  document.getElementById('right').onclick = () => move(2, 0);
+  #gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #c5e3bf;
+    overflow: hidden;
+  }
 
-  function move(dx, dy) {
-    if (flying) return;
-
-    x += dx;
-    y += dy;
-    updatePosition();
-
-    // 檢查是否走出清邁地圖範圍
-    if (currentMap === 1 && (x < 0 || x > 100 || y < 0 || y > 100)) {
-      flyToBangkok();
+  /* 電腦版背景：兩地圖並排 */
+  @media (min-width: 800px) {
+    #gameContainer {
+      background-image: url('img/background1.png'), url('img/background2.png');
+      background-repeat: no-repeat, no-repeat;
+      background-position: 15% center, 85% center;
+      background-size: 512px 512px, 512px 512px;
     }
   }
 
-  // === 飛機動畫 + 地圖切換 ===
-  function flyToBangkok() {
-    flying = true;
-    player.src = "img/airplane.png";
-    player.style.transition = "all 2s ease-in-out";
+  /* 手機版背景：一開始只顯示清邁地圖 */
+  @media (max-width: 799px) {
+    #gameContainer {
+      background-image: url('img/background1.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
 
-    // 飛往右下角 (曼谷小圖位置)
-    player.style.left = "75vw";
-    player.style.top = "75vh";
-
-    setTimeout(() => {
-      // 清邁消失、曼谷放大
-      map1.classList.remove("active");
-      map2.classList.remove("mini");
-      map2.classList.add("active");
-
-      // 重置角色
-      player.src = "img/character.png";
-      player.style.transition = "none";
-      x = 50; 
-      y = 50;
-      updatePosition();
-
-      currentMap = 2;
-      flying = false;
-    }, 2000);
+    #miniBangkok {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 120px;
+      height: 120px;
+      background-image: url('img/background2.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      border: 2px solid #555;
+      border-radius: 8px;
+      z-index: 5;
+    }
   }
-}
-</script>
 
+  #hero {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url('img/us.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 10;
+  }
+
+  /* 虛擬按鈕（手機） */
+  #controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 150px;
+    z-index: 20;
+    display: none;
+  }
+
+  @media (max-width: 799px) {
+    #controls {
+      display: block;
+    }
+  }
+
+  .btn {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    text-align: center;
+    line-height: 60px;
+    font-weight: bold;
+    font-size: 20px;
+    user-select: none;
+  }
+  .btn:active {
+    background: #ffd;
+  }
+
+  #btnUp { top: 0; left: 70px; }
+  #btnDown { bottom: 0; left: 70px; }
+  #btnLeft { top: 45px; left: 0; }
+  #btnRight { top: 45px; right: 0; }
+
+</style>
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="hero"></div>
+    <div id="miniBangkok"></div>
+
+    <!-- 手機用方向鍵 -->
+    <div id="controls">
+      <div id="btnUp" class="btn">↑</div>
+      <div id="btnDown" class="btn">↓</div>
+      <div id="btnLeft" class="btn">←</div>
+      <div id="btnRight" class="btn">→</div>
+    </div>
+  </div>
+
+  <script>
+    const hero = document.getElementById("hero");
+    const container = document.getElementById("gameContainer");
+    const miniBangkok = document.getElementById("miniBangkok");
+    const isMobile = window.innerWidth < 800;
+
+    let heroPos = { x: 100, y: 200 };
+    let step = 6;
+    let inFlight = false;
+    let inBangkok = false;
+    let keys = {};
+
+    function updateHero() {
+      hero.style.left = heroPos.x + "px";
+      hero.style.top = heroPos.y + "px";
+    }
+    updateHero();
+
+    // 電腦鍵盤控制
+    document.addEventListener("keydown", e => keys[e.key] = true);
+    document.addEventListener("keyup", e => keys[e.key] = false);
+
+    // 手機方向鍵
+    if (isMobile) {
+      document.querySelectorAll(".btn").forEach(btn => {
+        btn.addEventListener("touchstart", e => {
+          e.preventDefault();
+          const dir = btn.id.replace("btn", "").toLowerCase();
+          keys[dir] = true;
+        });
+        btn.addEventListener("touchend", e => {
+          e.preventDefault();
+          const dir = btn.id.replace("btn", "").toLowerCase();
+          keys[dir] = false;
+        });
+      });
+    }
+
+    function gameLoop() {
+      if (inFlight) {
+        // 飛機飛行動畫
+        heroPos.x += 3;
+        heroPos.y += 2;
+        updateHero();
+
+        // 抵達曼谷
+        if (heroPos.x > window.innerWidth - 150 && heroPos.y > window.innerHeight - 150 && !inBangkok) {
+          inFlight = false;
+          inBangkok = true;
+          hero.style.backgroundImage = "url('img/us.png')";
+          container.style.backgroundImage = "url('img/background2.png')";
+          container.style.backgroundSize = "cover";
+          miniBangkok.style.display = "none";
+        }
+      } else {
+        let dx = 0, dy = 0;
+        if (keys["ArrowUp"] || keys["up"]) dy -= step;
+        if (keys["ArrowDown"] || keys["down"]) dy += step;
+        if (keys["ArrowLeft"] || keys["left"]) dx -= step;
+        if (keys["ArrowRight"] || keys["right"]) dx += step;
+
+        heroPos.x = Math.max(0, Math.min(window.innerWidth - 60, heroPos.x + dx));
+        heroPos.y = Math.max(0, Math.min(window.innerHeight - 60, heroPos.y + dy));
+        updateHero();
+
+        // 手機：走出清邁地圖
+        if (isMobile && heroPos.x > window.innerWidth - 100 && !inBangkok) {
+          hero.style.backgroundImage = "url('img/plane.png')";
+          inFlight = true;
+        }
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
 </body>
 </html>
