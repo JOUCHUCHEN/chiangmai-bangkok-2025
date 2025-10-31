@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版111</title>
+<title>清邁 & 曼谷 海洋版11</title>
 
 <style>
   
@@ -91,18 +91,20 @@ body {
 /* ===== 手機版調整 ===== */
 @media (max-width:799px){
   #chiangMaiMap{
-    display:block;
-    width: 80vw;                    
-    height: calc(80vw * 1.78);  /* iPhone15 Pro 約寬高比1:1.78 */
-    top: 5vh;
-    left: 6vw;
-    transform: none;
-    background-size: cover;
-    background-position: top center;
+    display: block;
+    width: 95vw;                  /* 幾乎佔滿寬度 */
+    aspect-ratio: 4 / 3;          /* 寬高比固定 4:3（你原圖是 1024×768 就是這比例）*/
+    top: 4vh;                     /* 保留上邊距 */
+    left: 50%;
+    transform: translateX(-50%);
+    background: url('img/chiangmai.png') no-repeat center/contain;
     z-index: 2;
   }
 
-  #controls { display: block; }
+  #controls { 
+    display: block; 
+    bottom: 140px;                /* 稍微上移 */
+  }
 }
 
 /* ===== 按鈕樣式 ===== */
@@ -255,6 +257,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
