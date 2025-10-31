@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>清邁 & 曼谷 海洋版111</title>
 <style>
 /* ===== 基本設定 ===== */
 body {
@@ -17,35 +17,23 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('img/ocean.png'); /* 預設海洋背景 */
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
+  background: url('img/ocean.png') no-repeat center/cover; /* 海洋底層 */
 }
 
-/* ===== 清邁浮動地圖 ===== */
+/* ===== 清邁地圖 ===== */
 #chiangMaiMap {
   position: absolute;
-  top: 50px;
-  left: 50px;
-  width: 400px;
-  height: 300px;
   background: url('img/background1.png') no-repeat center/contain;
-  z-index: 1;
-  display: none; /* 預設隱藏，手機顯示 */
+  z-index: 2;
 }
 
 /* ===== 曼谷小地圖 ===== */
 #miniBangkok {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 120px;
-  height: 120px;
   background: url('img/background2.png') no-repeat center/contain;
   border: 2px solid #333;
   border-radius: 8px;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ===== 主角 ===== */
@@ -85,8 +73,7 @@ body {
   z-index: 20;
 }
 @media (max-width:799px){
-  #controls { display: block; }
-  #chiangMaiMap { display:block; }
+  #controls { display:block; }
 }
 
 /* ===== 按鈕樣式 ===== */
@@ -104,26 +91,46 @@ body {
 }
 .btn:active { background:#ffd; }
 
-/* ===== 方向鍵位置 ===== */
+/* 方向鍵位置 */
 #btnUp { top:0; left:80px; }
 #btnDown { bottom:0; left:80px; }
 #btnLeft { top:60px; left:20px; }
 #btnRight { top:60px; right:20px; }
 #btnEnter { top:60px; left:80px; background:#ffeb3b; }
 
-/* ===== 電腦版背景 ===== */
+/* ===== 電腦版背景設定 ===== */
 @media (min-width:800px){
-  #gameContainer{
-    background-image: url('img/ocean.png'); /* 海洋底層 */
-  }
-  #chiangMaiMap { 
-    display: block; /* 顯示清邁浮動地圖 */
-    background: url('img/background1.png') no-repeat center/contain;
-    z-index: 2;
+  #chiangMaiMap {
+    display:block;
+    width: 400px;
+    height: 300px;
+    top: 50px;
+    left: 50px;
   }
   #miniBangkok {
-    display: block; 
-    z-index: 2;
+    display:block;
+    width: 400px;
+    height: 300px;
+    top: 50px;
+    right: 50px;
+  }
+}
+
+/* ===== 手機版放大清邁地圖 ===== */
+@media (max-width:799px){
+  #chiangMaiMap {
+    display:block;
+    width: 85vw;
+    height: auto;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  #miniBangkok {
+    width: 120px;
+    height: 120px;
+    bottom: 20px;
+    right: 20px;
   }
 }
 </style>
@@ -133,7 +140,7 @@ body {
   <div id="chiangMaiMap"></div>
   <div id="miniBangkok"></div>
   <div id="hero"></div>
-  
+
   <!-- 夜市 -->
   <div class="house" id="nightmarket" style="left:220px; top:250px;">
     <img src="img/nightmarket.png" alt="nightmarket">
@@ -151,13 +158,12 @@ body {
 
 <script>
 const hero = document.getElementById("hero");
-const container = document.getElementById("gameContainer");
 const chiangMaiMap = document.getElementById("chiangMaiMap");
 const miniBangkok = document.getElementById("miniBangkok");
 const nightmarket = document.getElementById("nightmarket");
 const isMobile = window.innerWidth < 800;
 
-let heroPos = {x:100,y:200};
+let heroPos = {x:100, y:200};
 let step = 6;
 let inFlight = false;
 let inBangkok = false;
@@ -174,12 +180,12 @@ document.addEventListener("keyup", e=> keys[e.key]=false);
 // 手機控制
 if(isMobile){
   document.querySelectorAll(".btn").forEach(btn=>{
-    btn.addEventListener("touchstart",e=>{
+    btn.addEventListener("touchstart", e=>{
       e.preventDefault();
       if(btn.id==="btnEnter") keys["Enter"]=true;
       else keys[btn.id.replace("btn","").toLowerCase()]=true;
     });
-    btn.addEventListener("touchend",e=>{
+    btn.addEventListener("touchend", e=>{
       e.preventDefault();
       if(btn.id==="btnEnter") keys["Enter"]=false;
       else keys[btn.id.replace("btn","").toLowerCase()]=false;
@@ -233,4 +239,3 @@ gameLoop();
 </script>
 </body>
 </html>
-
