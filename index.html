@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版11</title>
+<title>清邁 & 曼谷 海洋版1</title>
 
 <style>
   
@@ -92,18 +92,19 @@ body {
 @media (max-width:799px){
   #chiangMaiMap{
     display: block;
-    width: 95vw;                  /* 幾乎佔滿寬度 */
-    aspect-ratio: 4 / 3;          /* 寬高比固定 4:3（你原圖是 1024×768 就是這比例）*/
-    top: 4vh;                     /* 保留上邊距 */
+    width: 95vw;                  /* 幾乎滿版 */
+    aspect-ratio: 765 / 1492;     /* 根據原圖比例自動調整高度 */
+    top: 3vh;                     /* 稍微往下留邊 */
     left: 50%;
     transform: translateX(-50%);
     background: url('img/chiangmai.png') no-repeat center/contain;
+    background-size: contain;
     z-index: 2;
   }
 
   #controls { 
     display: block; 
-    bottom: 140px;                /* 稍微上移 */
+    bottom: 140px;                /* 控制鍵稍微上移 */
   }
 }
 
@@ -257,6 +258,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
