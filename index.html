@@ -90,21 +90,29 @@ body {
   
 /* ===== 手機版調整 ===== */
 @media (max-width:799px){
+  #gameContainer{
+    background: url('img/ocean.png') no-repeat center center;
+    background-size: cover; /* 讓海洋鋪滿整個螢幕 */
+    position: relative;
+    overflow: hidden;
+  }
+
   #chiangMaiMap{
     display: block;
-    width: 95vw;                  /* 幾乎滿版 */
-    aspect-ratio: 765 / 1492;     /* 根據原圖比例自動調整高度 */
-    top: 3vh;                     /* 稍微往下留邊 */
+    width: 90vw;                     /* 稍微縮小，留出邊緣 */
+    height: calc(90vw * 1492 / 765); /* 根據原始比例設定高度 */
+    max-height: 85vh;                /* 避免太高 */
+    position: absolute;
+    top: 50%;                        /* 垂直置中 */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     background: url('img/chiangmai.png') no-repeat center/contain;
-    background-size: contain;
     z-index: 2;
   }
 
-  #controls { 
-    display: block; 
-    bottom: 140px;                /* 控制鍵稍微上移 */
+  #controls {
+    display: block;
+    bottom: 120px;  /* 控制鍵再往上點 */
   }
 }
 
@@ -258,6 +266,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
