@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版</title>
+<title>清邁 & 曼谷 海洋版1</title>
 <style>
 /* ===== 基本設定 ===== */
 body {
@@ -114,10 +114,16 @@ body {
 /* ===== 電腦版背景 ===== */
 @media (min-width:800px){
   #gameContainer{
-    background-image: url('img/background1.png'), url('img/background2.png');
-    background-repeat: no-repeat, no-repeat;
-    background-position: 15% center, 85% center;
-    background-size: 512px 512px, 512px 512px;
+    background-image: url('img/ocean.png'); /* 海洋底層 */
+  }
+  #chiangMaiMap { 
+    display: block; /* 顯示清邁浮動地圖 */
+    background: url('img/background1.png') no-repeat center/contain;
+    z-index: 2;
+  }
+  #miniBangkok {
+    display: block; 
+    z-index: 2;
   }
 }
 </style>
@@ -227,3 +233,4 @@ gameLoop();
 </script>
 </body>
 </html>
+
