@@ -17,16 +17,11 @@
 
   /* ====== 遊戲容器區塊 ====== */
   #gameContainer {
-    background: linear-gradient(#4facfe, #00f2fe);
-    background-size: 200% 200%;
-    animation: oceanMove 6s ease-in-out infinite;
+    background-image: url('img/ocean.png'); /* ✅ 換成你的海洋圖 */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
-
-@keyframes oceanMove {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
 
   /* ====== 電腦版：並排顯示兩張地圖 ====== */
   @media (min-width: 800px) {
@@ -265,6 +260,7 @@
 </script>
 </body>
 </html>
+
 
 
 
