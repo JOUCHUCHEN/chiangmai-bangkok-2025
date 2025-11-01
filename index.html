@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 海洋版</title>
+<title>清邁 & 曼谷 雙地圖互動版</title>
+
 <style>
 body {
   margin: 0;
@@ -11,44 +12,43 @@ body {
   overflow: hidden;
   background: #5982CB;
 }
-
 #gameContainer {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('img/ocean.png');
-  background-size: cover;
-  background-position: bottom center;
   overflow: hidden;
 }
 
-/* 大清邁地圖 */
-#chiangMaiMap {
+/* 大地圖 */
+#mainMap {
   position: absolute;
   top: 10%;
   left: 50%;
   transform: translateX(-50%);
   width: 80vw;
   height: calc(80vw * 1492 / 765);
-  background: url('img/chiangmai.png') no-repeat center/contain;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   z-index: 2;
-  display: block;
 }
 
-/* 右下角小清邁地圖 */
-#miniChiangMai {
+/* 小地圖 */
+#miniMap {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
   width: 120px;
   height: 120px;
-  background: url('img/chiangmai.png') no-repeat center/contain;
+  bottom: 20px;
+  right: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   border: 2px solid #333;
   border-radius: 8px;
-  z-index: 1;
+  z-index: 3;
 }
 
-/* hero */
+/* 主角 */
 #hero {
   position: absolute;
   width: 60px;
@@ -67,22 +67,52 @@ body {
   cursor: pointer;
   z-index: 5;
 }
-.house img { width:100%; height:100%; object-fit:cover; }
+.house img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-/* 手機控制鍵 */
-#controls { position: fixed; bottom: 20px; left:50%; transform:translateX(-50%); width:220px; height:180px; display:none; z-index:20; pointer-events:none; }
-.btn { pointer-events:auto; position:absolute; width:60px; height:60px; background:rgba(255,255,255,0.8); border-radius:50%; text-align:center; line-height:60px; font-size:22px; font-weight:bold; box-shadow:0 3px 6px rgba(0,0,0,0.25);}
-.btn:active{background:#ffd;}
-#btnUp{top:-20px; left:80px;} #btnDown{bottom:20px; left:80px;} #btnLeft{top:40px; left:20px;} #btnRight{top:40px; right:20px;} #btnEnter{top:40px; left:80px; background:#ffeb3b;}
-@media(max-width:799px){#controls{display:block; bottom:120px;}}
+/* 手機控制 */
+#controls {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 180px;
+  display: none;
+  z-index: 20;
+  pointer-events: none;
+}
+.btn { pointer-events: auto; }
+.btn {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 60px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+.btn:active { background:#ffd; }
+#btnUp { top: -20px; left:80px; }
+#btnDown { bottom:20px; left:80px; }
+#btnLeft { top:40px; left:20px; }
+#btnRight { top:40px; right:20px; }
+#btnEnter { top:40px; left:80px; background:#ffeb3b; }
+@media (max-width:799px){ #controls { display:block; } }
 </style>
 </head>
 <body>
 <div id="gameContainer">
-  <div id="chiangMaiMap"></div>
-  <div id="miniChiangMai"></div>
+  <div id="mainMap"></div>
+  <div id="miniMap"></div>
   <div id="hero"></div>
-
+  
   <!-- 夜市 -->
   <div class="house" id="nightmarket" style="left:220px; top:250px;">
     <img src="img/nightmarket.png" alt="nightmarket">
@@ -101,19 +131,33 @@ body {
 <script>
 const hero = document.getElementById("hero");
 const container = document.getElementById("gameContainer");
-const chiangMaiMap = document.getElementById("chiangMaiMap");
-const miniChiangMai = document.getElementById("miniChiangMai");
+const mainMap = document.getElementById("mainMap");
+const miniMap = document.getElementById("miniMap");
 const nightmarket = document.getElementById("nightmarket");
 const isMobile = window.innerWidth < 800;
 
 let heroPos = {x:100, y:200};
 let step = 6;
-let inFlight = false;
-let mapExpanded = false;
+let currentMap = "chiangMai"; // chiangMai / bangkok
 
-// 更新 hero 位置
-function updateHero(){ hero.style.left = heroPos.x + "px"; hero.style.top = heroPos.y + "px"; }
-updateHero();
+// 設定地圖資源
+const maps = {
+  chiangMai: { main:'img/chiangmai.png', mini:'img/background2.png' },
+  bangkok: { main:'img/background2.png', mini:'img/chiangmai.png' }
+};
+
+// 初始化地圖
+function updateMaps(){
+  mainMap.style.backgroundImage = `url('${maps[currentMap].main}')`;
+  miniMap.style.backgroundImage = `url('${maps[currentMap].mini}')`;
+  miniMap.style.width = "120px";
+  miniMap.style.height = "120px";
+  miniMap.style.bottom = "20px";
+  miniMap.style.right = "20px";
+  miniMap.style.transform = "translate(0,0)";
+  miniMap.style.zIndex = 3;
+}
+updateMaps();
 
 // 鍵盤控制
 const keys = {};
@@ -123,12 +167,12 @@ document.addEventListener("keyup", e=> keys[e.key]=false);
 // 手機控制
 if(isMobile){
   document.querySelectorAll(".btn").forEach(btn=>{
-    btn.addEventListener("touchstart",e=>{
+    btn.addEventListener("touchstart", e=>{
       e.preventDefault();
       if(btn.id==="btnEnter") keys["Enter"]=true;
       else keys[btn.id.replace("btn","").toLowerCase()]=true;
     });
-    btn.addEventListener("touchend",e=>{
+    btn.addEventListener("touchend", e=>{
       e.preventDefault();
       if(btn.id==="btnEnter") keys["Enter"]=false;
       else keys[btn.id.replace("btn","").toLowerCase()]=false;
@@ -136,10 +180,14 @@ if(isMobile){
   });
 }
 
+// 更新 hero
+function updateHero(){ hero.style.left = heroPos.x+"px"; hero.style.top = heroPos.y+"px"; }
+updateHero();
+
 // 碰撞判斷
 function overlap(pos, el){
   const rect = el.getBoundingClientRect();
-  return !(pos.x + hero.offsetWidth < rect.left || pos.x > rect.right || 
+  return !(pos.x + hero.offsetWidth < rect.left || pos.x > rect.right ||
            pos.y + hero.offsetHeight < rect.top || pos.y > rect.bottom);
 }
 
@@ -156,29 +204,14 @@ function gameLoop(){
   heroPos.y = Math.max(0, Math.min(containerRect.height - hero.offsetHeight, heroPos.y + dy));
   updateHero();
 
-  const heroRect = hero.getBoundingClientRect();
-
-  // 碰到海洋邊界 → 變飛機
-  if(heroRect.top <= 0 || heroRect.bottom >= containerRect.height ||
-     heroRect.left <= 0 || heroRect.right >= containerRect.width){
-    hero.style.backgroundImage = "url('img/plane.png')";
-    inFlight = true;
-  }
-
-  // 碰到右下小地圖 → 展開大地圖
-  if(overlap(heroPos, miniChiangMai) && !mapExpanded){
-    chiangMaiMap.style.display = "block";
-    chiangMaiMap.style.width = "90vw";
-    chiangMaiMap.style.height = "90vh";
-    chiangMaiMap.style.left = "50%";
-    chiangMaiMap.style.top = "50%";
-    chiangMaiMap.style.transform = "translate(-50%, -50%)";
-    chiangMaiMap.style.zIndex = 20;
-    mapExpanded = true;
+  // 碰到小地圖 → 交換地圖
+  if(overlap(heroPos, miniMap)){
+    currentMap = currentMap === "chiangMai" ? "bangkok" : "chiangMai";
+    updateMaps();
   }
 
   // 夜市進入相簿
-  if(overlap(heroPos, nightmarket) && keys["Enter"]){
+  if(currentMap==="chiangMai" && overlap(heroPos, nightmarket) && keys["Enter"]){
     window.location.href="album.html";
   }
 
