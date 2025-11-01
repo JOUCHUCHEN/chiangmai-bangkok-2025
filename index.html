@@ -147,15 +147,30 @@ const maps = {
 };
 
 // 初始化地圖
+// 更新地圖函數
 function updateMaps(){
   mainMap.style.backgroundImage = `url('${maps[currentMap].main}')`;
   miniMap.style.backgroundImage = `url('${maps[currentMap].mini}')`;
+
   miniMap.style.width = "120px";
   miniMap.style.height = "120px";
-  miniMap.style.bottom = "20px";
-  miniMap.style.right = "20px";
-  miniMap.style.transform = "translate(0,0)";
   miniMap.style.zIndex = 3;
+
+  if(currentMap === "chiangMai"){
+    // 切換到清邁大地圖 → 小地圖曼谷放右下
+    miniMap.style.bottom = "20px";
+    miniMap.style.right = "20px";
+    miniMap.style.top = "auto";
+    miniMap.style.left = "auto";
+    miniMap.style.transform = "translate(0,0)";
+  } else {
+    // 切換到曼谷大地圖 → 小地圖清邁放右上
+    miniMap.style.top = "20px";
+    miniMap.style.right = "20px";
+    miniMap.style.bottom = "auto";
+    miniMap.style.left = "auto";
+    miniMap.style.transform = "translate(0,0)";
+  }
 }
 updateMaps();
 
@@ -222,3 +237,4 @@ gameLoop();
 </script>
 </body>
 </html>
+
