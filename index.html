@@ -16,10 +16,12 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  background: url('img/ocean.png') no-repeat center bottom;
+  background-size: cover;
   overflow: hidden;
+  z-index: 0;
 }
 
-/* 大地圖 */
 #mainMap {
   position: absolute;
   top: 10%;
@@ -29,23 +31,16 @@ body {
   height: calc(80vw * 1492 / 765);
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  z-index: 2;
+  z-index: 1;
 }
 
-/* 小地圖 */
 #miniMap {
   position: absolute;
   width: 120px;
   height: 120px;
-  bottom: 20px;
-  right: 20px;
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  border: 2px solid #333;
-  border-radius: 8px;
-  z-index: 3;
+  z-index: 2;
 }
 
 /* 主角 */
@@ -157,19 +152,15 @@ function updateMaps(){
   miniMap.style.zIndex = 3;
 
   if(currentMap === "chiangMai"){
-    // 切換到清邁大地圖 → 小地圖曼谷放右下
+    // 曼谷小地圖放右下
+    miniMap.style.top = "auto";
     miniMap.style.bottom = "20px";
     miniMap.style.right = "20px";
-    miniMap.style.top = "auto";
-    miniMap.style.left = "auto";
-    miniMap.style.transform = "translate(0,0)";
   } else {
-    // 切換到曼谷大地圖 → 小地圖清邁放右上
+    // 清邁小地圖放右上
     miniMap.style.top = "20px";
-    miniMap.style.right = "20px";
     miniMap.style.bottom = "auto";
-    miniMap.style.left = "auto";
-    miniMap.style.transform = "translate(0,0)";
+    miniMap.style.right = "20px";
   }
 }
 updateMaps();
@@ -237,5 +228,6 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
