@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 海洋版11</title>
+<title>清邁 & 曼谷 海洋版111</title>
 
 <style>
   
@@ -78,14 +78,18 @@ body {
 
 /* ===== 手機控制鍵 ===== */
 #controls {
-  position: absolute;
-  bottom: 100px;
+  position: fixed;
+  bottom: 20px;         /* 靠近螢幕底部 */
   left: 50%;
   transform: translateX(-50%);
   width: 220px;
   height: 180px;
   display: none;
   z-index: 20;
+  pointer-events: none;  /* ✅ 讓 hero 可穿過 */
+}
+.btn {
+  pointer-events: auto;  /* ✅ 只有按鈕可點 */
 }
   
 /* ===== 手機版調整 ===== */
@@ -243,8 +247,9 @@ function gameLoop(){
     if(keys["ArrowDown"]||keys["down"]) dy+=step;
     if(keys["ArrowLeft"]||keys["left"]) dx-=step;
     if(keys["ArrowRight"]||keys["right"]) dx+=step;
-    heroPos.x = Math.max(0, Math.min(window.innerWidth-60, heroPos.x+dx));
-    heroPos.y = Math.max(0, Math.min(window.innerHeight-60, heroPos.y+dy));
+    const containerRect = container.getBoundingClientRect();
+    heroPos.x = Math.max(0, Math.min(containerRect.width - 60, heroPos.x + dx));
+    heroPos.y = Math.max(0, Math.min(containerRect.height - 60, heroPos.y + dy));
     updateHero();
 
     // 夜市進入相簿
