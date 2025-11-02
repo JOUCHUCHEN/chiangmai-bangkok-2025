@@ -113,6 +113,10 @@ body {
     <img src="img/nightmarket.png" alt="nightmarket">
   </div>
 
+  <div class="house" id="watChediLuang" style="left:400px; top:280px;">
+  <img src="img/WatChediLuang.png" alt="WatChediLuang">
+</div>
+
   <!-- 手機控制 -->
   <div id="controls">
     <div id="btnUp" class="btn">↑</div>
@@ -129,6 +133,7 @@ const container = document.getElementById("gameContainer");
 const mainMap = document.getElementById("mainMap");
 const miniMap = document.getElementById("miniMap");
 const nightmarket = document.getElementById("nightmarket");
+const watChediLuang = document.getElementById("watChediLuang");
 const isMobile = window.innerWidth < 800;
 
 let heroPos = {x:100, y:200};
@@ -161,6 +166,15 @@ function updateMaps(){
     miniMap.style.top = "20px";
     miniMap.style.bottom = "auto";
     miniMap.style.right = "20px";
+  }
+
+  // 🟢 顯示/隱藏清邁景點
+  if (currentMap === "chiangMai") {
+    nightmarket.style.display = "block";
+    watChediLuang.style.display = "block";
+  } else {
+    nightmarket.style.display = "none";
+    watChediLuang.style.display = "none";
   }
 }
 updateMaps();
@@ -221,6 +235,10 @@ function gameLoop(){
     window.location.href="album.html";
   }
 
+  if(currentMap==="chiangMai" && overlap(heroPos, watChediLuang) && keys["Enter"]){
+  window.location.href="album2.html";  // 👉 新的相簿頁面
+  }
+
   requestAnimationFrame(gameLoop);
 }
 
@@ -228,6 +246,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
