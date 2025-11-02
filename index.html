@@ -207,11 +207,19 @@ updateHero();
 
 // 碰撞判斷
 function overlap(pos, el){
+  const containerRect = container.getBoundingClientRect();
   const rect = el.getBoundingClientRect();
-  return !(pos.x + hero.offsetWidth < rect.left || pos.x > rect.right ||
-           pos.y + hero.offsetHeight < rect.top || pos.y > rect.bottom);
-}
 
+  const elX = rect.left - containerRect.left;
+  const elY = rect.top - containerRect.top;
+
+  return !(
+    pos.x + hero.offsetWidth < elX ||
+    pos.x > elX + el.offsetWidth ||
+    pos.y + hero.offsetHeight < elY ||
+    pos.y > elY + el.offsetHeight
+  );
+}
 // 遊戲迴圈
 function gameLoop(){
   let dx=0, dy=0;
@@ -247,6 +255,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
