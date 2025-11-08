@@ -114,8 +114,8 @@ body {
   </div>
   
   <!-- Wat Chedi Luang -->
-  <div class="house" id="watChediLuang" style="left:52%; top:38%;">
-    <img src="img/WatChediLuang.png" alt="WatChediLuang">
+  <div class="house" id="temple" style="left:52%; top:38%;">
+    <img src="img/temple.png" alt="temple">
   </div>
 
   <!-- 手機控制 -->
@@ -134,7 +134,7 @@ const container = document.getElementById("gameContainer");
 const mainMap = document.getElementById("mainMap");
 const miniMap = document.getElementById("miniMap");
 const nightmarket = document.getElementById("nightmarket");
-const watChediLuang = document.getElementById("watChediLuang");
+const temple = document.getElementById("temple");
 const isMobile = window.innerWidth < 800;
 
 let heroPos = {x:100, y:200};
@@ -172,10 +172,10 @@ function updateMaps(){
   // 🟢 顯示/隱藏清邁景點
   if (currentMap === "chiangMai") {
     nightmarket.style.display = "block";
-    watChediLuang.style.display = "block";
+    temple.style.display = "block";
   } else {
     nightmarket.style.display = "none";
-    watChediLuang.style.display = "none";
+    temple.style.display = "none";
   }
 }
 updateMaps();
@@ -241,11 +241,11 @@ function gameLoop(){
 
   // 夜市進入相簿
   if(currentMap==="chiangMai" && overlap(heroPos, nightmarket) && keys["Enter"]){
-    window.location.href="album.html";
+    window.location.href="NIGHT MARKET.html";
   }
 
-  if(currentMap==="chiangMai" && overlap(heroPos, watChediLuang) && keys["Enter"]){
-  window.location.href="album2.html";  // 👉 新的相簿頁面
+  if(currentMap==="chiangMai" && overlap(heroPos, temple) && keys["Enter"]){
+  window.location.href="TEMPLE.html";  // 👉 新的相簿頁面
   }
 
   requestAnimationFrame(gameLoop);
@@ -255,11 +255,3 @@ gameLoop();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
