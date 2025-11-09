@@ -108,12 +108,12 @@ body {
   <div id="miniMap"></div>
   <div id="hero"></div>
   
-  <!-- 夜市 -->
+  <!-- NIGHT MARKET in CM -->
   <div class="house" id="nightmarket" style="left:28%; top:35%;">
     <img src="img/nightmarket.png" alt="nightmarket">
   </div>
   
-  <!-- Wat Chedi Luang -->
+  <!-- TEMPLE in CM -->
   <div class="house" id="temple" style="left:52%; top:38%;">
     <img src="img/temple.png" alt="temple">
   </div>
@@ -239,7 +239,7 @@ function gameLoop(){
     updateMaps();
   }
 
-  // 夜市進入相簿
+  // 進入相簿
   if(currentMap==="chiangMai" && overlap(heroPos, nightmarket) && keys["Enter"]){
     window.location.href="NIGHT MARKET in CM.html";
   }
@@ -255,4 +255,5 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
