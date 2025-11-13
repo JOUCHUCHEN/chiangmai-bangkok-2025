@@ -109,7 +109,7 @@ body {
   <div id="hero"></div>
   
   <!-- NIGHT MARKET in CM -->
-  <div class="house" id="nightmarket" style="left:30%; top:35%;">
+  <div class="house" id="nightmarket" style="left:35%; top:35%;">
     <img src="img/nightmarket.png" alt="nightmarket">
   </div>
   
@@ -138,6 +138,11 @@ body {
     <img src="img/food.png" alt="food">
   </div>
 
+  <!-- YOUME in CM -->
+  <div class="house" id="youme" style="left:45%; top:22%;">
+    <img src="img/youme.png" alt="food">
+  </div>
+
   <!-- 手機控制 -->
   <div id="controls">
     <div id="btnUp" class="btn">↑</div>
@@ -159,6 +164,7 @@ const catspot = document.getElementById("catspot");
 const cafe = document.getElementById("cafe");
 const bar = document.getElementById("bar");
 const food = document.getElementById("food");
+const youme = document.getElementById("youme");  
 const isMobile = window.innerWidth < 800;
 
 let heroPos = {x:100, y:200};
@@ -201,6 +207,7 @@ function updateMaps(){
     cafe.style.display = "block";
     bar.style.display = "block";
     food.style.display = "block";
+    youme.style.display = "block"
   } else {
     nightmarket.style.display = "none";
     temple.style.display = "none";
@@ -208,6 +215,7 @@ function updateMaps(){
     cafe.style.display = "none";
     bar.style.display = "none";
     food.style.display = "none";
+    youme.style.display = "none";
   }
 }
 updateMaps();
@@ -288,6 +296,10 @@ function gameLoop(){
     window.location.href="FOOD in CM.html";
   }
 
+  if(currentMap==="chiangMai" && overlap(heroPos, food) && keys["Enter"]){
+    window.location.href="YOUME in CM.html";
+  }
+
   requestAnimationFrame(gameLoop);
 }
 
@@ -295,10 +307,3 @@ gameLoop();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
