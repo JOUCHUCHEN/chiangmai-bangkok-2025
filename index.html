@@ -143,6 +143,11 @@ body {
     <img src="img/youme.png" alt="food">
   </div>
 
+  <!-- TOWNWALK in CM -->
+  <div class="house" id="townwalk" style="left:40%; top:28%;">
+    <img src="img/townwalk.png" alt="townwalk">
+  </div>
+
   <!-- 手機控制 -->
   <div id="controls">
     <div id="btnUp" class="btn">↑</div>
@@ -165,6 +170,7 @@ const cafe = document.getElementById("cafe");
 const bar = document.getElementById("bar");
 const food = document.getElementById("food");
 const youme = document.getElementById("youme");  
+const youme = document.getElementById("townwalk");  
 const isMobile = window.innerWidth < 800;
 
 let heroPos = {x:100, y:200};
@@ -207,7 +213,8 @@ function updateMaps(){
     cafe.style.display = "block";
     bar.style.display = "block";
     food.style.display = "block";
-    youme.style.display = "block"
+    youme.style.display = "block";
+    townwalk.style.display = "block";
   } else {
     nightmarket.style.display = "none";
     temple.style.display = "none";
@@ -216,6 +223,7 @@ function updateMaps(){
     bar.style.display = "none";
     food.style.display = "none";
     youme.style.display = "none";
+    townwalk.style.display = "none";
   }
 }
 updateMaps();
@@ -300,6 +308,10 @@ function gameLoop(){
     window.location.href="YOUME in CM.html";
   }
 
+   if(currentMap==="chiangMai" && overlap(heroPos, townwakj) && keys["Enter"]){
+    window.location.href="TOWNWALK in CM.html";
+  }
+
   requestAnimationFrame(gameLoop);
 }
 
@@ -307,5 +319,3 @@ gameLoop();
 </script>
 </body>
 </html>
-
-
