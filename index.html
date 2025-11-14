@@ -68,6 +68,22 @@ body {
   object-fit: cover;
 }
 
+.house1 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 5;
+}
+  
+.house1 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* 手機控制 */
 #controls {
   position: fixed;
@@ -99,7 +115,9 @@ body {
 #btnLeft { top:40px; left:20px; }
 #btnRight { top:40px; right:20px; }
 #btnEnter { top:40px; left:80px; background:#ffeb3b; }
+  
 @media (max-width:799px){ #controls { display:block; } }
+  
 </style>
 </head>
 <body>
@@ -109,7 +127,7 @@ body {
   <div id="hero"></div>
   
   <!-- NIGHT MARKET in CM -->
-  <div class="house" id="nightmarket" style="left:25%; top:60%;">
+  <div class="house" id="nightmarket" style="left:22%; top:70%;">
     <img src="img/nightmarket.png" alt="nightmarket">
   </div>
   
@@ -124,7 +142,7 @@ body {
   </div>
   
   <!-- CAFE in CM -->
-  <div class="house" id="cafe" style="left:60%; top:55%;">
+  <div class="house" id="cafe" style="left:37%; top:53%;">
     <img src="img/cafe.png" alt="cafe">
   </div>
   
@@ -139,7 +157,7 @@ body {
   </div>
 
   <!-- YOUME in CM -->
-  <div class="house" id="youme" style="left:25%; top:45%;">
+  <div class="house1" id="youme" style="left:22%; top:45%;">
     <img src="img/youme.png" alt="food">
   </div>
 
@@ -319,5 +337,6 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
