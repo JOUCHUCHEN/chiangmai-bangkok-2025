@@ -101,13 +101,14 @@ body {
   position: absolute;
   width: 60px;
   height: 60px;
-  background: rgba(255,255,255,0.8);
-  border-radius: 50%;
+  background: transparent !important; /* 透明背景 */
+  border-radius: 0;                   /* 取消圓形 */
+  box-shadow: none !important;        /* 移除陰影 */
   text-align: center;
   line-height: 60px;
   font-size: 22px;
   font-weight: bold;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  pointer-events: auto;
 }
 .btn:active { background:#ffd; }
 #btnUp { top: -20px; left:80px; }
@@ -126,7 +127,9 @@ pointer-events: none; /* 讓觸控事件落在按鈕，而不是圖片 */
 }
   
 </style>
+  
 </head>
+  
 <body>
 <div id="gameContainer">
   <div id="mainMap"></div>
@@ -344,6 +347,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
