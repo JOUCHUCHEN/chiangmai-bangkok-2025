@@ -117,6 +117,13 @@ body {
 #btnEnter { top:40px; left:80px; background:#ffeb3b; }
   
 @media (max-width:799px){ #controls { display:block; } }
+
+.btnImg {
+width: 40px;
+height: 40px;
+object-fit: contain;
+pointer-events: none; /* 讓觸控事件落在按鈕，而不是圖片 */
+}
   
 </style>
 </head>
@@ -168,11 +175,11 @@ body {
 
   <!-- 手機控制 -->
   <div id="controls">
-    <div id="btnUp" class="btn">↑</div>
-    <div id="btnLeft" class="btn">←</div>
+    <div id="btnUp" class="btn"><img src="img/up.png" class="btnImg"></div>
+    <div id="btnLeft" class="btn"><img src="img/left.png" class="btnImg"></div>
     <div id="btnEnter" class="btn">GO</div>
-    <div id="btnRight" class="btn">→</div>
-    <div id="btnDown" class="btn">↓</div>
+    <div id="btnRight" class="btn"><img src="img/right.png" class="btnImg"></div>
+    <div id="btnDown" class="btn"><img src="img/down.png" class="btnImg"></div>
   </div>
 </div>
 
@@ -337,6 +344,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
