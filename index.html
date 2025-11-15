@@ -131,6 +131,7 @@ pointer-events: none; /* 讓觸控事件落在按鈕，而不是圖片 */
 </head>
   
 <body>
+  
 <div id="gameContainer">
   <div id="mainMap"></div>
   <div id="miniMap"></div>
@@ -223,9 +224,8 @@ function updateMaps(){
 
   if(currentMap === "chiangMai"){
     // 曼谷小地圖放右下
-    miniMap.style.top = "auto";
-    miniMap.style.bottom = "20px";
-    miniMap.style.right = "20px";
+    miniMap.style.bottom = "25%";
+    miniMap.style.right = "5%";
   } else {
     // 清邁小地圖放右上
     miniMap.style.top = "20px";
@@ -347,6 +347,7 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
 
