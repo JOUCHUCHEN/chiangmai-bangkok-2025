@@ -129,6 +129,51 @@ height: 40px;
 object-fit: contain;
 pointer-events: none; /* 讓觸控事件落在按鈕，而不是圖片 */
 }
+
+/* ===============================
+   iPhone 15 / 15 Pro / 16 / 16 Pro
+   全螢幕 + 安全區域修正
+   =============================== */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 讓海洋背景完整顯示在任何 iPhone */
+#gameContainer {
+  width: 100vw;
+  height: 100vh;
+  background: url('img/ocean.png') no-repeat center center;
+  background-size: cover;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* 讓 mainMap 始終保持比例並在上下留海洋 */
+#mainMap {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 4%);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92vw;
+  height: calc(92vw * 1492 / 765); /* 原比例縮放 */
+  max-height: 80vh; /* 避免太高 */
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* 方向鍵 iPhone 15–16 位置調整 */
+@media (max-width: 800px){
+  #controls{
+    bottom: calc(env(safe-area-inset-bottom) + 100px);
+  }
+}
+
   
 </style>
   
@@ -351,5 +396,6 @@ gameLoop();
 </script>
 </body>
 </html>
+
 
 
