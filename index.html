@@ -1,353 +1,237 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁&曼谷WEDDING TRIP</title>
+<title>Chiang Mai & Bangkok Map Game</title>
 
 <style>
 body {
   margin: 0;
-  font-family: "Microsoft JhengHei", sans-serif;
   overflow: hidden;
-  background: #5982CB;
 }
+
 #gameContainer {
-  position: relative;
   width: 100vw;
   height: 100vh;
-  background: url('img/ocean.png') no-repeat center bottom;
+  background: url("img/ocean.png") no-repeat center center;
   background-size: cover;
+  position: relative;
   overflow: hidden;
-  z-index: 0;
 }
 
+/* 主地圖 */
 #mainMap {
   position: absolute;
-  top: 10%;
+  width: 90vw;
+  height: calc(90vw * 1492 / 765);
+  max-height: 85vh;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 95vw;
-  height: calc(95vw * 1492 / 765);
+  transform: translate(-50%, -55%);
   background-size: contain;
   background-repeat: no-repeat;
-  z-index: 1;
+  z-index: 2;
 }
 
+/* 小地圖 */
 #miniMap {
   position: absolute;
   width: 120px;
   height: 120px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
-
-  /* ⭐ 新增的小地圖外框 ⭐ */
-  border: 4px solid white;   /* 外框顏色與粗細 */
-  border-radius: 20px;        /* 圓角 */
-  box-shadow: 0 0 10px rgba(0,0,0,0.3); /*（可選）柔和外圈陰影 */
+  background-size: cover;
+  z-index: 3;
+  border-radius: 10px;
 }
 
-/* 主角 */
+/* 人物 */
 #hero {
-  position: absolute;
   width: 60px;
   height: 60px;
-  background: url('img/us.png') no-repeat center/cover;
+  background: url("img/hero.png") center/contain no-repeat;
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+}
+
+/* 景點：夜市 + 寺廟 + 可增加其他 */
+.poi {
+  width: 80px;
+  height: 80px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  z-index: 5;
+}
+.hidden { display: none; }
+
+/* 手機方向鍵容器 */
+#controls {
+  position: absolute;
+  bottom: 20px;
+  width: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
   z-index: 10;
 }
 
-.house {
-  position: absolute;
-  width: 65px;
-  height: 65px;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 5;
-}
-  
-.house img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.house1 {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 5;
-}
-  
-.house1 img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 手機控制 */
-#controls {
-  position: fixed;
-  bottom: 120px;
-  right: 10%;      /* ✔ 位置改用 right 更直覺 */
-  width: 220px;
-  height: 180px;
-  display: none;
-  z-index: 20;
-  pointer-events: none;
-}
-.btn { pointer-events: auto; }
+/* 方向鍵 */
 .btn {
-  position: absolute;
   width: 60px;
   height: 60px;
-  background: transparent !important; /* 透明背景 */
-  border-radius: 0;                   /* 取消圓形 */
-  box-shadow: none !important;        /* 移除陰影 */
-  text-align: center;
-  line-height: 60px;
-  font-size: 22px;
-  font-weight: bold;
-  pointer-events: auto;
+  font-size: 26px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;   /* 無白色底 */
 }
-.btn:active { background:#ffd; }
-#btnUp { top: 10px; left: 80px; }
-#btnDown { top: 90px; left: 80px; }   /* ← 修正：用 top，而非 bottom */
-#btnLeft { top: 50px; left: 40px; }
-#btnRight { top: 50px; left: 120px; } /* ← 改用 left 來對稱定位 */
-#btnEnter { top: 40px; left: 80px; }
-  
-@media (max-width:799px){ #controls { display:block; } }
 
-.btnImg {
-width: 40px;
-height: 40px;
-object-fit: contain;
-pointer-events: none; /* 讓觸控事件落在按鈕，而不是圖片 */
-}
-  
+.btn:active { background: #ffd; }
+
+/* 方向鍵位置 */
+#btnUp { top: -20px; left: 80px; position: absolute; }
+#btnDown { top: 60px; left: 80px; position: absolute; }
+#btnLeft { top: 20px; left: 40px; position: absolute; }
+#btnRight { top: 20px; left: 120px; position: absolute; }
+#btnEnter { top: 20px; left: 80px; position: absolute; }
 </style>
-  
 </head>
-  
+
 <body>
-  
+
 <div id="gameContainer">
+
+  <!-- 主地圖 -->
   <div id="mainMap"></div>
+
+  <!-- 小地圖 -->
   <div id="miniMap"></div>
+
+  <!-- 人物 -->
   <div id="hero"></div>
 
-  <!-- TEMPLE in CM -->
-  <div class="house" id="temple" style="left:62%; top:15%;">
-    <img src="img/temple.png" alt="temple">
-  </div>
+  <!-- 景點 -->
+  <div id="nightmarket" class="poi" style="left: 180px; top: 260px; background-image:url('img/nightmarket.png');"></div>
+  <div id="watChediLuang" class="poi" style="left: 300px; top: 420px; background-image:url('img/temple.png');"></div>
 
-  <!-- FOOD in CM -->
-  <div class="house" id="food" style="left:45%; top:22%;">
-    <img src="img/food.png" alt="food">
-  </div>
+  <!-- 可擴充：貓景點 / 咖啡 / 酒吧 / 美食 -->
+  <div id="catspot" class="poi hidden" style="background-image:url('img/cat.png'); left:250px; top:350px;"></div>
+  <div id="cafe" class="poi hidden" style="background-image:url('img/cafe.png'); left:200px; top:430px;"></div>
+  <div id="bar" class="poi hidden" style="background-image:url('img/bar.png'); left:340px; top:310px;"></div>
+  <div id="food" class="poi hidden" style="background-image:url('img/food.png'); left:260px; top:500px;"></div>
 
-  <!-- CATSPOT in CM -->
-  <div class="house" id="catspot" style="left:57%; top:28%;">
-    <img src="img/catspot.png" alt="catspot">
-  </div>
-
-  <!-- BAR in CM -->
-  <div class="house" id="bar" style="left:35%; top:35%;">
-    <img src="img/bar.png" alt="bar">
-  </div>
-
-  <!-- YOUME in CM -->
-  <div class="house1" id="youme" style="left:22%; top:45%;">
-    <img src="img/youme.png" alt="food">
-  </div>
-
-  <!-- CAFE in CM -->
-  <div class="house" id="cafe" style="left:37%; top:53%;">
-    <img src="img/cafe.png" alt="cafe">
-  </div>
-
-  <!-- TOWNWALK in CM -->
-  <div class="house" id="townwalk" style="left:20%; top:60%;">
-    <img src="img/townwalk.png" alt="townwalk">
-  </div>
-  
-  <!-- NIGHT MARKET in CM -->
-  <div class="house" id="nightmarket" style="left:20%; top:70%;">
-    <img src="img/nightmarket.png" alt="nightmarket">
-  </div>
-  
-  <!-- 手機控制 -->
+  <!-- 手機方向鍵 -->
   <div id="controls">
-    <div id="btnUp" class="btn"><img src="img/up.png" class="btnImg"></div>
-    <div id="btnLeft" class="btn"><img src="img/left.png" class="btnImg"></div>
-    <div id="btnEnter" class="btn">GO</div>
-    <div id="btnRight" class="btn"><img src="img/right.png" class="btnImg"></div>
-    <div id="btnDown" class="btn"><img src="img/down.png" class="btnImg"></div>
+    <button class="btn" id="btnUp">▲</button>
+    <button class="btn" id="btnLeft">◀</button>
+    <button class="btn" id="btnEnter">●</button>
+    <button class="btn" id="btnRight">▶</button>
+    <button class="btn" id="btnDown">▼</button>
   </div>
+
 </div>
 
 <script>
-const hero = document.getElementById("hero");
-const container = document.getElementById("gameContainer");
+// ========= 地圖資料 =========
+const maps = {
+  chiangMai: {
+    main: "img/chiangmai.png",
+    mini: "img/bangkok.png"
+  },
+  bangkok: {
+    main: "img/bangkok.png",
+    mini: "img/chiangmai.png"
+  }
+};
+
+// ========= DOM =========
 const mainMap = document.getElementById("mainMap");
 const miniMap = document.getElementById("miniMap");
+const hero = document.getElementById("hero");
+
 const nightmarket = document.getElementById("nightmarket");
-const temple = document.getElementById("temple");
+const watChediLuang = document.getElementById("watChediLuang");
+
 const catspot = document.getElementById("catspot");
 const cafe = document.getElementById("cafe");
 const bar = document.getElementById("bar");
 const food = document.getElementById("food");
-const youme = document.getElementById("youme");  
-const townwalk = document.getElementById("townwalk");  
-const isMobile = window.innerWidth < 800;
 
-let heroPos = {x:100, y:200};
-let step = 6;
-let currentMap = "chiangMai"; // chiangMai / bangkok
+let currentMap = "chiangMai";
+let heroPos = { x: 300, y: 300 };
 
-// 設定地圖資源
-const maps = {
-  chiangMai: { main:'img/chiangmai.png', mini:'img/bangkok.png' },
-  bangkok: { main:'img/bangkok.png', mini:'img/chiangmai.png' }
-};
-
-// 初始化地圖
-// 更新地圖函數
+// ========= 更新地圖（主圖 + 小圖 + 景點顯示） =========
 function updateMaps(){
   mainMap.style.backgroundImage = `url('${maps[currentMap].main}')`;
   miniMap.style.backgroundImage = `url('${maps[currentMap].mini}')`;
 
-  miniMap.style.width = "120px";
-  miniMap.style.height = "120px";
-  miniMap.style.zIndex = 3;
-
+  // 小地圖位置切換
   if(currentMap === "chiangMai"){
-    // 曼谷小地圖放右下
-    miniMap.style.bottom = "25%";
-    miniMap.style.right = "5%";
+    miniMap.style.top = "auto";
+    miniMap.style.bottom = "20px";
+    miniMap.style.right = "20px";
   } else {
-    // 清邁小地圖放右上
     miniMap.style.top = "20px";
     miniMap.style.bottom = "auto";
     miniMap.style.right = "20px";
   }
 
-  // 🟢 顯示/隱藏清邁景點
-  if (currentMap === "chiangMai") {
+  // 景點顯示控制
+  if(currentMap === "chiangMai"){
     nightmarket.style.display = "block";
-    temple.style.display = "block";
+    watChediLuang.style.display = "block";
     catspot.style.display = "block";
     cafe.style.display = "block";
     bar.style.display = "block";
     food.style.display = "block";
-    youme.style.display = "block";
-    townwalk.style.display = "block";
   } else {
     nightmarket.style.display = "none";
-    temple.style.display = "none";
+    watChediLuang.style.display = "none";
     catspot.style.display = "none";
     cafe.style.display = "none";
     bar.style.display = "none";
     food.style.display = "none";
-    youme.style.display = "none";
-    townwalk.style.display = "none";
   }
 }
+
 updateMaps();
 
-// 鍵盤控制
-const keys = {};
-document.addEventListener("keydown", e=> keys[e.key]=true);
-document.addEventListener("keyup", e=> keys[e.key]=false);
+// ========= 角色移動 =========
+function moveHero(dx, dy){
+  const container = document.getElementById("gameContainer");
+  const rect = container.getBoundingClientRect();
 
-// 手機控制
-if(isMobile){
-  document.querySelectorAll(".btn").forEach(btn=>{
-    btn.addEventListener("touchstart", e=>{
-      e.preventDefault();
-      if(btn.id==="btnEnter") keys["Enter"]=true;
-      else keys[btn.id.replace("btn","").toLowerCase()]=true;
-    });
-    btn.addEventListener("touchend", e=>{
-      e.preventDefault();
-      if(btn.id==="btnEnter") keys["Enter"]=false;
-      else keys[btn.id.replace("btn","").toLowerCase()]=false;
-    });
-  });
+  heroPos.x = Math.max(0, Math.min(rect.width - 60, heroPos.x + dx));
+  heroPos.y = Math.max(0, Math.min(rect.height - 60, heroPos.y + dy));
+
+  hero.style.left = heroPos.x + "px";
+  hero.style.top = heroPos.y + "px";
+
+  checkMapSwitch();
 }
 
-// 更新 hero
-function updateHero(){ hero.style.left = heroPos.x+"px"; hero.style.top = heroPos.y+"px"; }
-updateHero();
-
-// 碰撞判斷
-function overlap(pos, el){
-  const containerRect = container.getBoundingClientRect();
-  const rect = el.getBoundingClientRect();
-
-  const elX = rect.left - containerRect.left;
-  const elY = rect.top - containerRect.top;
-
-  return !(
-    pos.x + hero.offsetWidth < elX ||
-    pos.x > elX + el.offsetWidth ||
-    pos.y + hero.offsetHeight < elY ||
-    pos.y > elY + el.offsetHeight
-  );
-}
-// 遊戲迴圈
-function gameLoop(){
-  let dx=0, dy=0;
-  if(keys["ArrowUp"]||keys["up"]) dy-=step;
-  if(keys["ArrowDown"]||keys["down"]) dy+=step;
-  if(keys["ArrowLeft"]||keys["left"]) dx-=step;
-  if(keys["ArrowRight"]||keys["right"]) dx+=step;
-
-  const containerRect = container.getBoundingClientRect();
-  heroPos.x = Math.max(0, Math.min(containerRect.width - hero.offsetWidth, heroPos.x + dx));
-  heroPos.y = Math.max(0, Math.min(containerRect.height - hero.offsetHeight, heroPos.y + dy));
-  updateHero();
-
-  // 碰到小地圖 → 交換地圖
-  if(overlap(heroPos, miniMap)){
-    currentMap = currentMap === "chiangMai" ? "bangkok" : "chiangMai";
+// ========= 切換地圖 =========
+function checkMapSwitch(){
+  if(currentMap === "chiangMai" && heroPos.y < 10){
+    currentMap = "bangkok";
     updateMaps();
+    heroPos.y = window.innerHeight - 100;
   }
-
-  // 進入相簿
-  if(currentMap==="chiangMai" && overlap(heroPos, catspot) && keys["Enter"]){
-    window.location.href="CATSPOT in CM.html";
+  else if(currentMap === "bangkok" && heroPos.y > window.innerHeight - 80){
+    currentMap = "chiangMai";
+    updateMaps();
+    heroPos.y = 50;
   }
-  
-  if(currentMap==="chiangMai" && overlap(heroPos, cafe) && keys["Enter"]){
-    window.location.href="CAFE in CM.html";
-  }
-  
-  if(currentMap==="chiangMai" && overlap(heroPos, bar) && keys["Enter"]){
-    window.location.href="BAR in CM.html";
-  }
-  
-  if(currentMap==="chiangMai" && overlap(heroPos, food) && keys["Enter"]){
-    window.location.href="FOOD in CM.html";
-  }
-
-  if(currentMap==="chiangMai" && overlap(heroPos, youme) && keys["Enter"]){
-    window.location.href="YOUME in CM.html";
-  }
-
-   if(currentMap==="chiangMai" && overlap(heroPos, townwalk) && keys["Enter"]){
-    window.location.href="TOWNWALK in CM.html";
-  }
-
-  requestAnimationFrame(gameLoop);
+  hero.style.top = heroPos.y + "px";
 }
 
-gameLoop();
+// ========= 手機按鈕 =========
+document.getElementById("btnUp").onclick = ()=> moveHero(0, -20);
+document.getElementById("btnDown").onclick = ()=> moveHero(0, +20);
+document.getElementById("btnLeft").onclick = ()=> moveHero(-20, 0);
+document.getElementById("btnRight").onclick = ()=> moveHero(+20, 0);
+document.getElementById("btnEnter").onclick = ()=> alert("ENTER!");
 </script>
+
 </body>
 </html>
