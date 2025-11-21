@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>清邁 & 曼谷 WEDDING TRIP 1</title>
+<title>清邁 & 曼谷 結婚之旅</title>
 
 <style>
 body {
@@ -115,11 +115,11 @@ body {
   pointer-events: auto;
 }
 .btn:active { background:#ffd; }
-#btnUp { top: -20px; left:80px; }
-#btnDown { bottom:20px; left:80px; }
-#btnLeft { top:40px; left:20px; }
-#btnRight { top:40px; right:20px; }
-#btnEnter { top:40px; left:80px; background:#ffeb3b; }
+#btnUp { top: 10px; left: 80px; }
+#btnDown { top: 90px; left: 80px; }   /* ← 修正：用 top，而非 bottom */
+#btnLeft { top: 50px; left: 40px; }
+#btnRight { top: 50px; left: 120px; } /* ← 改用 left 來對稱定位 */
+#btnEnter { top: 40px; left: 80px; }
   
 @media (max-width:799px){ #controls { display:block; } }
 
@@ -212,8 +212,8 @@ let currentMap = "chiangMai"; // chiangMai / bangkok
 
 // 設定地圖資源
 const maps = {
-  chiangMai: { main:'chiangmai-bangkok-2025/img/chiangmai.png', mini:'chiangmai-bangkok-2025/img/bangkok.png' },
-  bangkok: { main:'chiangmai-bangkok-2025/img/bangkok.png', mini:'chiangmai-bangkok-2025/img/chiangmai.png' }
+  chiangMai: { main:'img/chiangmai.png', mini:'img/bangkok.png' },
+  bangkok: { main:'img/bangkok.png', mini:'img/chiangmai.png' }
 };
 
 // 初始化地圖
@@ -351,5 +351,4 @@ gameLoop();
 </script>
 </body>
 </html>
-
 
